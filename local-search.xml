@@ -4,11 +4,24 @@
   
   
   <entry>
-    <title>置顶公告</title>
-    <link href="/2024/08/29/hello-world/"/>
-    <url>/2024/08/29/hello-world/</url>
+    <title>page</title>
+    <link href="/2024/08/30/page/"/>
+    <url>/2024/08/30/page/</url>
     
-    <content type="html"><![CDATA[<p>欢迎来的我的个人小站</p>]]></content>
+    <content type="html"><![CDATA[<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>  cout&lt;&lt;<span class="hljs-string">&quot;hello world&quot;</span>&lt;&lt;endl;<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>置顶公告</title>
+    <link href="/2024/08/29/announcement/"/>
+    <url>/2024/08/29/announcement/</url>
+    
+    <content type="html"><![CDATA[<p>欢迎来到我的个人小站！这里是我分享日常生活、技术心得和个人兴趣的地方。在这个小站，你可以找到我对各种话题的见解与想法，无论是编程技术、读书笔记，还是旅行感悟。我希望通过这个平台，能够与更多的朋友交流分享，发现生活中的点滴美好。谢谢你的到来，希望你能喜欢这里的内容！</p>]]></content>
     
     
     
