@@ -19,16 +19,16 @@
   <meta name="author" content="YangYangYang">
   <meta name="keywords" content="blog">
   
-    <meta name="description" content="提供 vsocode 配置文件">
+    <meta name="description" content="提供 vscode 配置文件">
 <meta property="og:type" content="article">
 <meta property="og:title" content="vscode 基于 CMake 配置 C++ 调试环境">
 <meta property="og:url" content="https://zzmes.github.io/2024/08/30/vscode-cpp/index.html">
 <meta property="og:site_name" content="zy space">
-<meta property="og:description" content="提供 vsocode 配置文件">
+<meta property="og:description" content="提供 vscode 配置文件">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zzmes.github.io/img/post_index/vscode.jpg">
 <meta property="article:published_time" content="2024-08-30T11:49:56.000Z">
-<meta property="article:modified_time" content="2024-08-30T13:30:46.983Z">
+<meta property="article:modified_time" content="2024-08-30T13:41:50.788Z">
 <meta property="article:author" content="YangYangYang">
 <meta property="article:tag" content="vscode">
 <meta property="article:tag" content="C++">
@@ -345,7 +345,7 @@ Tools</strong>插件。</li>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;configurations&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Mac&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;includePath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span> <br>                <span class="hljs-string">&quot;$&#123;workspaceFolder&#125;/**&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;/opt/homebrew/Cellar/opencv/4.10.0_2/include/opencv4/**&quot;</span><br>            <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;defines&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;macFrameworkPath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                <span class="hljs-string">&quot;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks&quot;</span><br>            <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;compilerPath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/usr/bin/clang&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;cStandard&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;c17&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;cppStandard&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;c++17&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;intelliSenseMode&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;macos-clang-arm64&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;configurationProvider&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ms-vscode.cmake-tools&quot;</span><br>        <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure></li>
 </ul>
 <h2 id="运行生成任务">运行生成任务</h2>
-<p>MAC vscode
+<p>Mac vscode
 快捷键：command+shift+B则可看到对于的生成任务，打好断点后，就能够调试程序了。<img
 src="/img/example/vscode.png" srcset="/img/loading.gif" lazyload alt="vscode构建" /></p>
 
