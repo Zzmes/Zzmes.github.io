@@ -19,26 +19,25 @@
   <meta name="author" content="YangYangYang">
   <meta name="keywords" content="blog">
   
-    <meta name="description" content="👏👏👏欢迎访问羊羊羊的个人博客！！！">
+    <meta name="description" content="x11图形转发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="个人博客说明">
-<meta property="og:url" content="https://zzmes.github.io/2024/08/29/announcement/index.html">
+<meta property="og:title" content="Docker Linux转发X11图形界面调试方法">
+<meta property="og:url" content="https://zzmes.github.io/2024/08/30/docker_X11/index.html">
 <meta property="og:site_name" content="zy‘s space">
-<meta property="og:description" content="👏👏👏欢迎访问羊羊羊的个人博客！！！">
+<meta property="og:description" content="x11图形转发">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zzmes.github.io/img/post_index/anno.jpg">
-<meta property="article:published_time" content="2024-08-29T07:13:34.037Z">
-<meta property="article:modified_time" content="2024-08-30T07:18:16.953Z">
+<meta property="article:published_time" content="2024-08-30T07:21:42.000Z">
+<meta property="article:modified_time" content="2024-08-30T08:09:21.871Z">
 <meta property="article:author" content="YangYangYang">
-<meta property="article:tag" content="blog">
+<meta property="article:tag" content="X11转发">
+<meta property="article:tag" content="Docker">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://zzmes.github.io/img/post_index/anno.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>个人博客说明 - zy‘s space</title>
+  <title>Docker Linux转发X11图形界面调试方法 - zy‘s space</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -222,7 +221,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="个人博客说明"></span>
+            <span id="subtitle" data-typed-text="Docker Linux转发X11图形界面调试方法"></span>
           
         </div>
 
@@ -238,8 +237,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-08-29 15:13" pubdate>
-          2024年8月29日 下午
+        <time datetime="2024-08-30 15:21" pubdate>
+          2024年8月30日 下午
         </time>
       </span>
     
@@ -251,7 +250,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          31 字
+          215 字
         
       </span>
     
@@ -263,7 +262,7 @@
         
         
           <!-- compatible with older versions-->
-          1 分钟
+          2 分钟
         
       </span>
     
@@ -309,7 +308,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">个人博客说明</h1>
+            <h1 id="seo-header">Docker Linux转发X11图形界面调试方法</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
@@ -323,7 +322,28 @@
             
               <div class="markdown-body">
                 
-                <p>欢迎来到我的个人小站！我会在这里分享日常生活、技术心得以及个人兴趣。</p>
+                <h2 id="下载xquartz">下载XQuartz</h2>
+<p>由于我的电脑是 Mac，因此下载<a
+target="_blank" rel="noopener" href="https://www.xquartz.org/">XQuartz</a>工具来作为转发工具。</p>
+<h2 id="构建容器">构建容器</h2>
+<ul>
+<li>在拉去 docker 镜像后，构建镜像容器需运行以下命令：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -p 10001:22 -gpus all --shm-size=8G -it --ipc=host --net=host \<br>		-v /your_local_path/:/your_env_path \<br>		-v /tmp/.X11-unix:/tmp/.X11-unix \<br>		-e DISPLAY=unix<span class="hljs-variable">$DISPLAY</span> \<br>		-e GDK_SCALE \<br>		-e GDK_DPI_SCALE \<br>		--name your_container_name your_images_id /bin/bash<br></code></pre></td></tr></table></figure>
+<p>主要就是将<em>your_container_name</em>替换为自己想要的容器名称，<em>your_images_id</em>替换为
+pull 下来的镜像 ID。如果还需挂在磁盘使用-v 命令就可以了。</p>
+<h2 id="配置-ssh">配置 SSH</h2>
+<ul>
+<li>通常我们采用 SSH 远程连接服务器，需要修改客户端SSH
+配置，配置文件一般在~/.ssh/config，样例如下：</li>
+</ul>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">Host</span> <span class="hljs-number">3090</span><br>    HostName <span class="hljs-comment">#修改为对于的服务器 IP</span><br>    User <span class="hljs-comment">#修改对应的登录用户</span><br>    Port <span class="hljs-number">22</span><br>    ForwardX11Trusted <span class="hljs-literal">yes</span><br>    ForwardAgent <span class="hljs-literal">yes</span><br>    ForwardX11 <span class="hljs-literal">yes</span><br></code></pre></td></tr></table></figure>
+<h2 id="运行终端导入环境变量">运行终端导入环境变量</h2>
+<ul>
+<li>在运行程序是，导入环境变量：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> DISPLAY=localhost:0.0<br></code></pre></td></tr></table></figure>
+<p>就能实现图像转发。</p>
 
                 
               </div>
@@ -332,6 +352,36 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Docker/" class="category-chain-item">Docker</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/X11%E8%BD%AC%E5%8F%91/" class="print-no-link">#X11转发</a>
+      
+        <a href="/tags/Docker/" class="print-no-link">#Docker</a>
+      
+    </div>
   
 </div>
 
@@ -341,8 +391,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>个人博客说明</div>
-      <div>https://zzmes.github.io/2024/08/29/announcement/</div>
+      <div>Docker Linux转发X11图形界面调试方法</div>
+      <div>https://zzmes.github.io/2024/08/30/docker_X11/</div>
     </div>
     <div class="license-meta">
       
@@ -354,7 +404,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年8月29日</div>
+          <div>2024年8月30日</div>
         </div>
       
       
@@ -386,15 +436,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/08/30/docker_X11/" title="Docker Linux转发X11图形界面调试方法">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Docker Linux转发X11图形界面调试方法</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2024/08/29/announcement/" title="个人博客说明">
+                        <span class="hidden-mobile">个人博客说明</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

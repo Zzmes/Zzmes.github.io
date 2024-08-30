@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Docker Linux转发X11图形界面调试方法</title>
+    <link href="/2024/08/30/docker_X11/"/>
+    <url>/2024/08/30/docker_X11/</url>
+    
+    <content type="html"><![CDATA[<h2 id="下载xquartz">下载XQuartz</h2><p>由于我的电脑是 Mac，因此下载<ahref="https://www.xquartz.org/">XQuartz</a>工具来作为转发工具。</p><h2 id="构建容器">构建容器</h2><ul><li>在拉去 docker 镜像后，构建镜像容器需运行以下命令：</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -p 10001:22 -gpus all --shm-size=8G -it --ipc=host --net=host \<br>-v /your_local_path/:/your_env_path \<br>-v /tmp/.X11-unix:/tmp/.X11-unix \<br>-e DISPLAY=unix<span class="hljs-variable">$DISPLAY</span> \<br>-e GDK_SCALE \<br>-e GDK_DPI_SCALE \<br>--name your_container_name your_images_id /bin/bash<br></code></pre></td></tr></table></figure><p>主要就是将<em>your_container_name</em>替换为自己想要的容器名称，<em>your_images_id</em>替换为pull 下来的镜像 ID。如果还需挂在磁盘使用-v 命令就可以了。</p><h2 id="配置-ssh">配置 SSH</h2><ul><li>通常我们采用 SSH 远程连接服务器，需要修改客户端SSH配置，配置文件一般在~/.ssh/config，样例如下：</li></ul><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">Host</span> <span class="hljs-number">3090</span><br>    HostName <span class="hljs-comment">#修改为对于的服务器 IP</span><br>    User <span class="hljs-comment">#修改对应的登录用户</span><br>    Port <span class="hljs-number">22</span><br>    ForwardX11Trusted <span class="hljs-literal">yes</span><br>    ForwardAgent <span class="hljs-literal">yes</span><br>    ForwardX11 <span class="hljs-literal">yes</span><br></code></pre></td></tr></table></figure><h2 id="运行终端导入环境变量">运行终端导入环境变量</h2><ul><li>在运行程序是，导入环境变量：</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> DISPLAY=localhost:0.0<br></code></pre></td></tr></table></figure><p>就能实现图像转发。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Docker</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>X11转发</tag>
+      
+      <tag>Docker</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>个人博客说明</title>
     <link href="/2024/08/29/announcement/"/>
     <url>/2024/08/29/announcement/</url>
