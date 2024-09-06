@@ -78,7 +78,6 @@
 <link rel="stylesheet" href="/css/twikoo.css">
 <link rel="stylesheet" href="/css/macpanel.css">
 <link rel="stylesheet" href="/css/scrollAnimation.css">
-<link rel="stylesheet" href="/css/cloudedGlass.css">
 
 
 
@@ -101,7 +100,7 @@
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 
-<body><!-- hexo injector body_begin start --><div id="web_bg"></div><!-- hexo injector body_begin end -->
+<body>
   
 
   <header>
@@ -254,7 +253,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          215 字
+          217 字
         
       </span>
     
@@ -326,27 +325,23 @@
             
               <div class="markdown-body">
                 
-                <h2 id="下载xquartz">下载XQuartz</h2>
-<p>由于我的电脑是 Mac，因此下载<a
-target="_blank" rel="noopener" href="https://www.xquartz.org/">XQuartz</a>工具来作为转发工具。</p>
-<h2 id="构建容器">构建容器</h2>
-<ul>
+                <h2 id="下载XQuartz"><a href="#下载XQuartz" class="headerlink" title="下载XQuartz"></a>下载XQuartz</h2><p>由于我的电脑是 Mac，因此下载<a target="_blank" rel="noopener" href="https://www.xquartz.org/">XQuartz</a>工具来作为转发工具。</p>
+<h2 id="构建容器"><a href="#构建容器" class="headerlink" title="构建容器"></a>构建容器</h2><ul>
 <li>在拉去 docker 镜像后，构建镜像容器需运行以下命令：</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -p 10001:22 -gpus all --shm-size=8G -it --ipc=host --net=host \<br>		-v /your_local_path/:/your_env_path \<br>		-v /tmp/.X11-unix:/tmp/.X11-unix \<br>		-e DISPLAY=unix<span class="hljs-variable">$DISPLAY</span> \<br>		-e GDK_SCALE \<br>		-e GDK_DPI_SCALE \<br>		--name your_container_name your_images_id /bin/bash<br></code></pre></td></tr></table></figure>
-<p>主要就是将<em>your_container_name</em>替换为自己想要的容器名称，<em>your_images_id</em>替换为
-pull 下来的镜像 ID。如果还需挂在磁盘使用-v 命令就可以了。</p>
-<h2 id="配置-ssh">配置 SSH</h2>
-<ul>
-<li>通常我们采用 SSH 远程连接服务器，需要修改客户端SSH
-配置，配置文件一般在~/.ssh/config，样例如下：</li>
+
+<p>主要就是将<em>your_container_name</em>替换为自己想要的容器名称，<em>your_images_id</em>替换为 pull 下来的镜像 ID。如果还需挂在磁盘使用-v 命令就可以了。</p>
+<h2 id="配置-SSH"><a href="#配置-SSH" class="headerlink" title="配置 SSH"></a>配置 SSH</h2><ul>
+<li>通常我们采用 SSH 远程连接服务器，需要修改客户端SSH 配置，配置文件一般在~&#x2F;.ssh&#x2F;config，样例如下：</li>
 </ul>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">Host</span> <span class="hljs-number">3090</span><br>    HostName <span class="hljs-comment">#修改为对于的服务器 IP</span><br>    User <span class="hljs-comment">#修改对应的登录用户</span><br>    Port <span class="hljs-number">22</span><br>    ForwardX11Trusted <span class="hljs-literal">yes</span><br>    ForwardAgent <span class="hljs-literal">yes</span><br>    ForwardX11 <span class="hljs-literal">yes</span><br></code></pre></td></tr></table></figure>
-<h2 id="运行终端导入环境变量">运行终端导入环境变量</h2>
-<ul>
+
+<h2 id="运行终端导入环境变量"><a href="#运行终端导入环境变量" class="headerlink" title="运行终端导入环境变量"></a>运行终端导入环境变量</h2><ul>
 <li>在运行程序前，导入环境变量：</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> DISPLAY=localhost:0.0<br></code></pre></td></tr></table></figure>
+
 <p>就能实现图像转发。</p>
 
                 
@@ -790,5 +785,5 @@ pull 下来的镜像 ID。如果还需挂在磁盘使用-v 命令就可以了。
   <noscript>
     <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
   </noscript>
-<!-- hexo injector body_end start --><script src="/js/backgroundize.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
 </html>
