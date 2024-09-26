@@ -27,7 +27,7 @@
 <meta property="og:description" content="个人 CUDA 学习笔记">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-09-26T10:03:36.000Z">
-<meta property="article:modified_time" content="2024-09-26T13:08:57.273Z">
+<meta property="article:modified_time" content="2024-09-26T13:13:07.515Z">
 <meta property="article:author" content="YangYangYang">
 <meta property="article:tag" content="CUDA 编程基础">
 <meta name="twitter:card" content="summary_large_image">
@@ -353,8 +353,10 @@ Instruction Multiple Thread(SIMT)。</p>
 core会分成几个warp（即CUDA core在SM中分组)，由warp
 scheduler负责调度。尽管warp中的线程从同一程序地址，但可能具有不同的行为，比如分支结构，因为GPU规定warp中所有线程在同一周期执行相同的指令，warp发散会导致性能下降。一个SM同时并发的warp是有限的，因为资源限制，SM要为每个线程块分配共享内存，而也要为每个线程束中的线程分配独立的寄存器，所以SM的配置会影响其所支持的线程块和warp并发数量。</p>
 <p>每个block的warp数量可以由下面的公式计算获得： <span
-class="math display">\[WarpPerBlock=ceil(\frac{ThreadsPerBlock}{WarpSize})\]</span></p>
-<p>一个warp中的线程必然在同一个block中，如果block所含线程数目不是warp大小的整数倍，那么多出的那些thread所在的warp中，会剩余一些inactive的thread，也就是说，即使凑不够warp整数倍的thread，硬件也会为warp凑足，只不过那些thread是inactive状态，需要注意的是，即使这部分thread是inactive的，也会消耗SM资源。由于warp的大小一般为32，所以block所含的thread的大小一般要设置为32的倍数。</p>
+class="math display">\[
+WarpPerBlock=ceil(\frac{ThreadsPerBlock}{WarpSize})
+\]</span>
+一个warp中的线程必然在同一个block中，如果block所含线程数目不是warp大小的整数倍，那么多出的那些thread所在的warp中，会剩余一些inactive的thread，也就是说，即使凑不够warp整数倍的thread，硬件也会为warp凑足，只不过那些thread是inactive状态，需要注意的是，即使这部分thread是inactive的，也会消耗SM资源。由于warp的大小一般为32，所以block所含的thread的大小一般要设置为32的倍数。</p>
 
                 
               </div>
