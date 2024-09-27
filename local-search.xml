@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>计算机网络速通(一) 什么是蜂窝移动网络？</title>
+    <link href="/2024/09/27/network1/"/>
+    <url>/2024/09/27/network1/</url>
+    
+    <content type="html"><![CDATA[<h1 id="网络的组成">网络的组成</h1><ul><li><p>网络可以看成一张巨大的网，细看这个网，这个网里面还有很多小型的网络。用无数个小型的网络组成一个中型网络，再又许多中型的网络组成一个大型的网络。分析一个小型网络，公司网络，如下图：公司网络从本地网络提供商接入，然后内部再分成一个个子网，所看到的线路被称为通信链路，用于传输网络信号。<img src="/img/example/network1.png" alt="network1" /></p></li><li><p>这时候观察到有的节点同时接入两两条以上的链路，这个时候因为链路已经发生了分叉，数据传输到这些节点需要选择方向，因此我们称这些节点需要进行交换（Switch）。</p></li><li><p>数据发生交换的时候会从一条链路进入交换设备然后缓存下来，再转发切换到另一条路径，如下图所示。</p></li><li><p>交换技术的本质：让数据切换路径。因为网络中的数据是以分组或封包（Packet）的形式进行传输。因此也称这个技术为封包交换（PacketSwitch）。比如说需要传递一首 MP3格式的歌曲，歌曲本身不是一次性传输完成的，而是被拆分成很多个封包，每个封包只有歌曲中的部分数据，而封包一旦遇到岔路口，就需要封包交换技术，帮助每个封包选择最合理的路径。</p></li><li><p>常见具有交换能力的设备：链路层交换机和路由器。通常情况下，两个网络可以通过路由器进行连接，多个设备也可以通过交换机进行连接。路由器通常也具有交换机的功能。<img src="/img/example/network2.png" alt="network1" /></p></li><li><p>在下图中，公司内部的网络被分成多级子网，每个路由器交换机构成了一级子网，最高级的路由器在公司的网络边缘，它可以将网络内部节点连接到其他网络（外部的网络）。</p></li><li><p>本地网络提供商（ISP）提供的互联网先到达边缘路由器，然后再渗透到内部的网络节点</p></li><li><p>公司内部若干服务器可以通过交换机形成一个局域网络。公司内部的办公设备（笔记本、电脑）也可以通过无线路由器或者交换机形成一个局域网。局域网络之间可以通过路由器、交换机进行连接，从而构成一个更大的局域网络。<img src="/img/example/network3.png" alt="network1" /></p></li></ul><h1 id="移动网络">移动网络</h1><ul><li>网络传输需要通信链路。通信链路是一个抽象的概念（类似面向对象中抽象类和继承类的关系）。</li><li>同轴电缆、无线信号的发送接收器、蓝牙信道都是通信链路。</li><li>在移动网络中，无线信号构成了通信链路。<ul><li>在移动网络的设计当中，通信的核心被称之为蜂窝塔，也称做基站。</li></ul></li><li>构成移动网络最小的网络（蜂窝网）如下图所示：国家或全球网络提供商将网络提供给处于蜂窝网络边缘的路由器，而路由器再连接蜂窝塔，再通过蜂窝塔提供给六边形区域内的设备。（通常是国家级别的网络服务提供商负责部署基站：中国电信等等 ）。<ul><li>将网络提供给一个子网的行为称为网络提供。（比如运营商给家里装宽带）。</li><li>对一个子网连接提供商的网络，称为网络接入。 <imgsrc="/img/example/network4.png" alt="network1" /></li></ul></li><li>家用网络 移动网络 公司网络的关系 <imgsrc="/img/example/network5.png" alt="network1" /></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机网络</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>计算机网络基础</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>CUDA学习笔记（二）CUDA core 的矩阵乘法计算</title>
     <link href="/2024/09/26/cuda2/"/>
     <url>/2024/09/26/cuda2/</url>
@@ -33,7 +58,7 @@
     <link href="/2024/09/26/cuda1/"/>
     <url>/2024/09/26/cuda1/</url>
     
-    <content type="html"><![CDATA[<h1 id="CUDA-Kernel-中的-Grid-Block-Thread-和-warp"><a href="#CUDA-Kernel-中的-Grid-Block-Thread-和-warp" class="headerlink" title="CUDA Kernel 中的 Grid Block Thread 和 warp"></a>CUDA Kernel 中的 Grid Block Thread 和 warp</h1><p><img src="/img/example/cuda1-1.png" alt="alt text" title=" CUDA"><br><img src="/img/example/cuda1-2.png" alt="alt text" title=" CUDA"></p><ul><li><p>从硬件上看：</p><ul><li>SP(Streaming Processor)：GPU的最基本处理单元，也被称为 CUDA core</li><li>SM(Streaming MultiProcessor)：一个 SM 又多个CUDA core组成；SM还包括特殊运算单元(SFU)，共享内存(shared memory)，寄存器文件(Register File)和调度器(Warp Scheduler)等</li></ul></li><li><p>从软件上看：</p><ul><li>thread：一个CUDA的并行程序会被以许多个thread来执行。</li><li>block: 数个thread会被群组成一个block，同一个block中的thread可以同步，也可以通过shared memory进行通信。</li><li>grid: 多个block则会再构成grid。</li></ul></li></ul><h1 id="warp"><a href="#warp" class="headerlink" title="warp"></a>warp</h1><p>SM采用的SIMT(Single-Instruction, Multiple-Thread，单指令多线程)架构，warp(线程束)是最基本的执行单元，一个warp包含32个并行thread，这些thread以不同数据资源执行相同的指令。</p><p>当一个kernel被执行时，grid中的线程块被分配到SM上，一个线程块（block）的thread只能在一个SM上调度，SM一般可以调度多个线程块，大量的thread可能被分到不同的SM上。每个thread拥有它自己的程序计数器和状态寄存器，并且用该线程自己的数据执行指令，这就是所谓的Single Instruction Multiple Thread(SIMT)。</p><p>一个CUDA core可以执行一个thread，一个SM的CUDA core会分成几个warp（即CUDA core在SM中分组)，由warp scheduler负责调度。尽管warp中的线程从同一程序地址，但可能具有不同的行为，比如分支结构，因为GPU规定warp中所有线程在同一周期执行相同的指令，warp发散会导致性能下降。一个SM同时并发的warp是有限的，因为资源限制，SM要为每个线程块分配共享内存，而也要为每个线程束中的线程分配独立的寄存器，所以SM的配置会影响其所支持的线程块和warp并发数量。</p><p>每个block的warp数量可以由下面的公式计算获得：<br>$$<br>WarpPerBlock&#x3D;ceil(\frac{ThreadsPerBlock}{WarpSize})<br>$$<br>一个warp中的线程必然在同一个block中，如果block所含线程数目不是warp大小的整数倍，那么多出的那些thread所在的warp中，会剩余一些inactive的thread，也就是说，即使凑不够warp整数倍的thread，硬件也会为warp凑足，只不过那些thread是inactive状态，需要注意的是，即使这部分thread是inactive的，也会消耗SM资源。由于warp的大小一般为32，所以block所含的thread的大小一般要设置为32的倍数。</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="cuda-kernel-中的-grid-block-thread-和-warp">CUDA Kernel 中的Grid Block Thread 和 warp</h1><p>![alt text](/img/example/cuda1-1.png " CUDA") ![alttext](/img/example/cuda1-2.png " CUDA")</p><ul><li>从硬件上看：<ul><li>SP(Streaming Processor)：GPU的最基本处理单元，也被称为 CUDAcore</li><li>SM(Streaming MultiProcessor)：一个 SM 又多个CUDAcore组成；SM还包括特殊运算单元(SFU)，共享内存(sharedmemory)，寄存器文件(Register File)和调度器(Warp Scheduler)等</li></ul></li><li>从软件上看：<ul><li>thread：一个CUDA的并行程序会被以许多个thread来执行。</li><li>block:数个thread会被群组成一个block，同一个block中的thread可以同步，也可以通过sharedmemory进行通信。</li><li>grid: 多个block则会再构成grid。</li></ul></li></ul><h1 id="warp">warp</h1><p>SM采用的SIMT(Single-Instruction,Multiple-Thread，单指令多线程)架构，warp(线程束)是最基本的执行单元，一个warp包含32个并行thread，这些thread以不同数据资源执行相同的指令。</p><p>当一个kernel被执行时，grid中的线程块被分配到SM上，一个线程块（block）的thread只能在一个SM上调度，SM一般可以调度多个线程块，大量的thread可能被分到不同的SM上。每个thread拥有它自己的程序计数器和状态寄存器，并且用该线程自己的数据执行指令，这就是所谓的SingleInstruction Multiple Thread(SIMT)。</p><p>一个CUDA core可以执行一个thread，一个SM的CUDAcore会分成几个warp（即CUDA core在SM中分组)，由warpscheduler负责调度。尽管warp中的线程从同一程序地址，但可能具有不同的行为，比如分支结构，因为GPU规定warp中所有线程在同一周期执行相同的指令，warp发散会导致性能下降。一个SM同时并发的warp是有限的，因为资源限制，SM要为每个线程块分配共享内存，而也要为每个线程束中的线程分配独立的寄存器，所以SM的配置会影响其所支持的线程块和warp并发数量。</p><p>每个block的warp数量可以由下面的公式计算获得： <spanclass="math display">\[WarpPerBlock=ceil(\frac{ThreadsPerBlock}{WarpSize})\]</span>一个warp中的线程必然在同一个block中，如果block所含线程数目不是warp大小的整数倍，那么多出的那些thread所在的warp中，会剩余一些inactive的thread，也就是说，即使凑不够warp整数倍的thread，硬件也会为warp凑足，只不过那些thread是inactive状态，需要注意的是，即使这部分thread是inactive的，也会消耗SM资源。由于warp的大小一般为32，所以block所含的thread的大小一般要设置为32的倍数。</p>]]></content>
     
     
     <categories>

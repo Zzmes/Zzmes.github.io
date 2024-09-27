@@ -19,24 +19,28 @@
   <meta name="author" content="YangYangYang">
   <meta name="keywords" content="blog">
   
-    <meta name="description" content="个人 CUDA 学习笔记">
+    <meta name="description" content="网络的组成  网络可以看成一张巨大的网，细看这个网，这个网里面还有很多小型的网络。用无数个小型的网络组成一个中型网络，再又许多中型的网络组成一个大型的网络。 分析一个小型网络，公司网络，如下图：公司网络从本地网络提供商接入，然后内部再分成一个个子网，所看到的线路被称为通信链路，用于传输网络信号。  这时候观察到有的节点同时接入两两条以上的链路，这个时候因为链路已经发生了分叉，数据传输到这些节点需要">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CUDA学习笔记（二）CUDA core 的矩阵乘法计算">
-<meta property="og:url" content="https://zzmes.github.io/2024/09/26/cuda2/index.html">
+<meta property="og:title" content="计算机网络速通(一) 什么是蜂窝移动网络？">
+<meta property="og:url" content="https://zzmes.github.io/2024/09/27/network1/index.html">
 <meta property="og:site_name" content="zy space">
-<meta property="og:description" content="个人 CUDA 学习笔记">
+<meta property="og:description" content="网络的组成  网络可以看成一张巨大的网，细看这个网，这个网里面还有很多小型的网络。用无数个小型的网络组成一个中型网络，再又许多中型的网络组成一个大型的网络。 分析一个小型网络，公司网络，如下图：公司网络从本地网络提供商接入，然后内部再分成一个个子网，所看到的线路被称为通信链路，用于传输网络信号。  这时候观察到有的节点同时接入两两条以上的链路，这个时候因为链路已经发生了分叉，数据传输到这些节点需要">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-09-26T13:19:01.000Z">
-<meta property="article:modified_time" content="2024-09-27T10:35:22.029Z">
+<meta property="og:image" content="https://zzmes.github.io/img/example/network1.png">
+<meta property="og:image" content="https://zzmes.github.io/img/example/network2.png">
+<meta property="og:image" content="https://zzmes.github.io/img/example/network3.png">
+<meta property="article:published_time" content="2024-09-27T10:28:37.000Z">
+<meta property="article:modified_time" content="2024-09-27T12:39:39.440Z">
 <meta property="article:author" content="YangYangYang">
-<meta property="article:tag" content="CUDA 编程基础">
+<meta property="article:tag" content="计算机网络基础">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://zzmes.github.io/img/example/network1.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>CUDA学习笔记（二）CUDA core 的矩阵乘法计算 - zy space</title>
+  <title>计算机网络速通(一) 什么是蜂窝移动网络？ - zy space</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -221,7 +225,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="CUDA学习笔记（二）CUDA core 的矩阵乘法计算"></span>
+            <span id="subtitle" data-typed-text="计算机网络速通(一) 什么是蜂窝移动网络？"></span>
           
         </div>
 
@@ -237,8 +241,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-09-26 21:19" pubdate>
-          2024年9月26日 晚上
+        <time datetime="2024-09-27 18:28" pubdate>
+          2024年9月27日 晚上
         </time>
       </span>
     
@@ -250,7 +254,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          0 字
+          928 字
         
       </span>
     
@@ -262,7 +266,7 @@
         
         
           <!-- compatible with older versions-->
-          1 分钟
+          8 分钟
         
       </span>
     
@@ -308,7 +312,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">CUDA学习笔记（二）CUDA core 的矩阵乘法计算</h1>
+            <h1 id="seo-header">计算机网络速通(一) 什么是蜂窝移动网络？</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
@@ -322,7 +326,41 @@
             
               <div class="markdown-body">
                 
-                
+                <h1 id="网络的组成">网络的组成</h1>
+<ul>
+<li><p>网络可以看成一张巨大的网，细看这个网，这个网里面还有很多小型的网络。用无数个小型的网络组成一个中型网络，再又许多中型的网络组成一个大型的网络。
+分析一个小型网络，公司网络，如下图：公司网络从本地网络提供商接入，然后内部再分成一个个子网，所看到的线路被称为通信链路，用于传输网络信号。
+<img src="/img/example/network1.png" srcset="/img/loading.gif" lazyload alt="network1" /></p></li>
+<li><p>这时候观察到有的节点同时接入两两条以上的链路，这个时候因为链路已经发生了分叉，数据传输到这些节点需要选择方向，因此我们称这些节点需要进行交换（Switch）。</p></li>
+<li><p>数据发生交换的时候会从一条链路进入交换设备然后缓存下来，再转发切换到另一条路径，如下图所示。</p></li>
+<li><p>交换技术的本质：让数据切换路径。因为网络中的数据是以分组或封包（Packet）的形式进行传输。因此也称这个技术为封包交换（Packet
+Switch）。比如说需要传递一首 MP3
+格式的歌曲，歌曲本身不是一次性传输完成的，而是被拆分成很多个封包，每个封包只有歌曲中的部分数据，而封包一旦遇到岔路口，就需要封包交换技术，帮助每个封包选择最合理的路径。</p></li>
+<li><p>常见具有交换能力的设备：链路层交换机和路由器。通常情况下，两个网络可以通过路由器进行连接，多个设备也可以通过交换机进行连接。路由器通常也具有交换机的功能。
+<img src="/img/example/network2.png" srcset="/img/loading.gif" lazyload alt="network1" /></p></li>
+<li><p>在下图中，公司内部的网络被分成多级子网，每个路由器交换机构成了一级子网，最高级的路由器在公司的网络边缘，它可以将网络内部节点连接到其他网络（外部的网络）。</p></li>
+<li><p>本地网络提供商（ISP）提供的互联网先到达边缘路由器，然后再渗透到内部的网络节点</p></li>
+<li><p>公司内部若干服务器可以通过交换机形成一个局域网络。公司内部的办公设备（笔记本、电脑）也可以通过无线路由器或者交换机形成一个局域网。局域网络之间可以通过路由器、交换机进行连接，从而构成一个更大的局域网络。
+<img src="/img/example/network3.png" srcset="/img/loading.gif" lazyload alt="network1" /></p></li>
+</ul>
+<h1 id="移动网络">移动网络</h1>
+<ul>
+<li>网络传输需要通信链路。通信链路是一个抽象的概念（类似面向对象中抽象类和继承类的关系）。</li>
+<li>同轴电缆、无线信号的发送接收器、蓝牙信道都是通信链路。</li>
+<li>在移动网络中，无线信号构成了通信链路。
+<ul>
+<li>在移动网络的设计当中，通信的核心被称之为蜂窝塔，也称做基站。</li>
+</ul></li>
+<li>构成移动网络最小的网络（蜂窝网）如下图所示：国家或全球网络提供商将网络提供给处于蜂窝网络边缘的路由器，而路由器再连接蜂窝塔，再通过蜂窝塔提供给六边形区域内的设备。
+（通常是国家级别的网络服务提供商负责部署基站：中国电信等等 ）。
+<ul>
+<li>将网络提供给一个子网的行为称为网络提供。（比如运营商给家里装宽带）。</li>
+<li>对一个子网连接提供商的网络，称为网络接入。 <img
+src="/img/example/network4.png" srcset="/img/loading.gif" lazyload alt="network1" /></li>
+</ul></li>
+<li>家用网络 移动网络 公司网络的关系 <img
+src="/img/example/network5.png" srcset="/img/loading.gif" lazyload alt="network1" /></li>
+</ul>
 
                 
               </div>
@@ -341,7 +379,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/CUDA/" class="category-chain-item">CUDA</a>
+  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" class="category-chain-item">计算机网络</a>
   
   
 
@@ -356,7 +394,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/CUDA-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/" class="print-no-link">#CUDA 编程基础</a>
+        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" class="print-no-link">#计算机网络基础</a>
       
     </div>
   
@@ -368,8 +406,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>CUDA学习笔记（二）CUDA core 的矩阵乘法计算</div>
-      <div>https://zzmes.github.io/2024/09/26/cuda2/</div>
+      <div>计算机网络速通(一) 什么是蜂窝移动网络？</div>
+      <div>https://zzmes.github.io/2024/09/27/network1/</div>
     </div>
     <div class="license-meta">
       
@@ -381,7 +419,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年9月26日</div>
+          <div>2024年9月27日</div>
         </div>
       
       
@@ -413,18 +451,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/09/27/network1/" title="计算机网络速通(一) 什么是蜂窝移动网络？">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">计算机网络速通(一) 什么是蜂窝移动网络？</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/09/26/cuda1/" title="CUDA学习笔记（一）GPU 架构解析">
-                        <span class="hidden-mobile">CUDA学习笔记（一）GPU 架构解析</span>
+                      <a href="/2024/09/26/cuda2/" title="CUDA学习笔记（二）CUDA core 的矩阵乘法计算">
+                        <span class="hidden-mobile">CUDA学习笔记（二）CUDA core 的矩阵乘法计算</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
