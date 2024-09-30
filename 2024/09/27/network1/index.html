@@ -29,8 +29,6 @@
 <meta property="og:image" content="https://zzmes.github.io/img/example/network1.png">
 <meta property="og:image" content="https://zzmes.github.io/img/example/network2.png">
 <meta property="og:image" content="https://zzmes.github.io/img/example/network3.png">
-<meta property="og:image" content="https://zzmes.github.io/img/example/network4.png">
-<meta property="og:image" content="https://zzmes.github.io/img/example/network5.png">
 <meta property="og:image" content="https://zzmes.github.io/img/example/network6.png">
 <meta property="article:published_time" content="2024-09-27T10:28:37.000Z">
 <meta property="article:modified_time" content="2024-09-30T03:35:10.912Z">
@@ -329,54 +327,57 @@
             
               <div class="markdown-body">
                 
-                <h1 id="网络的组成"><a href="#网络的组成" class="headerlink" title="网络的组成"></a>网络的组成</h1><ul>
-<li><p>网络可以看成一张巨大的网，细看这个网，这个网里面还有很多小型的网络。用无数个小型的网络组成一个中型网络，再又许多中型的网络组成一个大型的网络。<br>分析一个小型网络，公司网络，如下图：公司网络从本地网络提供商接入，然后内部再分成一个个子网，所看到的线路被称为通信链路，用于传输网络信号。<br><img src="/img/example/network1.png" srcset="/img/loading.gif" lazyload alt="network1"></p>
-</li>
-<li><p>这时候观察到有的节点同时接入两两条以上的链路，这个时候因为链路已经发生了分叉，数据传输到这些节点需要选择方向，因此我们称这些节点需要进行交换（Switch）。</p>
-</li>
-<li><p>数据发生交换的时候会从一条链路进入交换设备然后缓存下来，再转发切换到另一条路径，如下图所示。</p>
-</li>
-<li><p>交换技术的本质：让数据切换路径。因为网络中的数据是以分组或封包（Packet）的形式进行传输。因此也称这个技术为封包交换（Packet Switch）。比如说需要传递一首 MP3 格式的歌曲，歌曲本身不是一次性传输完成的，而是被拆分成很多个封包，每个封包只有歌曲中的部分数据，而封包一旦遇到岔路口，就需要封包交换技术，帮助每个封包选择最合理的路径。 </p>
-</li>
-<li><p>常见具有交换能力的设备：链路层交换机和路由器。通常情况下，两个网络可以通过路由器进行连接，多个设备也可以通过交换机进行连接。路由器通常也具有交换机的功能。<br><img src="/img/example/network2.png" srcset="/img/loading.gif" lazyload alt="network1"></p>
-</li>
-<li><p>在下图中，公司内部的网络被分成多级子网，每个路由器交换机构成了一级子网，最高级的路由器在公司的网络边缘，它可以将网络内部节点连接到其他网络（外部的网络）。</p>
-</li>
-<li><p>本地网络提供商（ISP）提供的互联网先到达边缘路由器，然后再渗透到内部的网络节点</p>
-</li>
-<li><p>公司内部若干服务器可以通过交换机形成一个局域网络。公司内部的办公设备（笔记本、电脑）也可以通过无线路由器或者交换机形成一个局域网。局域网络之间可以通过路由器、交换机进行连接，从而构成一个更大的局域网络。<br><img src="/img/example/network3.png" srcset="/img/loading.gif" lazyload alt="network1"></p>
-</li>
+                <h1 id="网络的组成">网络的组成</h1>
+<ul>
+<li><p>网络可以看成一张巨大的网，细看这个网，这个网里面还有很多小型的网络。用无数个小型的网络组成一个中型网络，再又许多中型的网络组成一个大型的网络。
+分析一个小型网络，公司网络，如下图：公司网络从本地网络提供商接入，然后内部再分成一个个子网，所看到的线路被称为通信链路，用于传输网络信号。
+<img src="/img/example/network1.png" srcset="/img/loading.gif" lazyload alt="network1" /></p></li>
+<li><p>这时候观察到有的节点同时接入两两条以上的链路，这个时候因为链路已经发生了分叉，数据传输到这些节点需要选择方向，因此我们称这些节点需要进行交换（Switch）。</p></li>
+<li><p>数据发生交换的时候会从一条链路进入交换设备然后缓存下来，再转发切换到另一条路径，如下图所示。</p></li>
+<li><p>交换技术的本质：让数据切换路径。因为网络中的数据是以分组或封包（Packet）的形式进行传输。因此也称这个技术为封包交换（Packet
+Switch）。比如说需要传递一首 MP3
+格式的歌曲，歌曲本身不是一次性传输完成的，而是被拆分成很多个封包，每个封包只有歌曲中的部分数据，而封包一旦遇到岔路口，就需要封包交换技术，帮助每个封包选择最合理的路径。</p></li>
+<li><p>常见具有交换能力的设备：链路层交换机和路由器。通常情况下，两个网络可以通过路由器进行连接，多个设备也可以通过交换机进行连接。路由器通常也具有交换机的功能。
+<img src="/img/example/network2.png" srcset="/img/loading.gif" lazyload alt="network1" /></p></li>
+<li><p>在下图中，公司内部的网络被分成多级子网，每个路由器交换机构成了一级子网，最高级的路由器在公司的网络边缘，它可以将网络内部节点连接到其他网络（外部的网络）。</p></li>
+<li><p>本地网络提供商（ISP）提供的互联网先到达边缘路由器，然后再渗透到内部的网络节点</p></li>
+<li><p>公司内部若干服务器可以通过交换机形成一个局域网络。公司内部的办公设备（笔记本、电脑）也可以通过无线路由器或者交换机形成一个局域网。局域网络之间可以通过路由器、交换机进行连接，从而构成一个更大的局域网络。
+<img src="/img/example/network3.png" srcset="/img/loading.gif" lazyload alt="network1" /></p></li>
 </ul>
-<h1 id="移动网络"><a href="#移动网络" class="headerlink" title="移动网络"></a>移动网络</h1><ul>
-<li><p>网络传输需要通信链路。通信链路是一个抽象的概念（类似面向对象中抽象类和继承类的关系）。</p>
-</li>
-<li><p>同轴电缆、无线信号的发送接收器、蓝牙信道都是通信链路。</p>
-</li>
-<li><p>在移动网络中，无线信号构成了通信链路。</p>
+<h1 id="移动网络">移动网络</h1>
+<ul>
+<li>网络传输需要通信链路。通信链路是一个抽象的概念（类似面向对象中抽象类和继承类的关系）。</li>
+<li>同轴电缆、无线信号的发送接收器、蓝牙信道都是通信链路。</li>
+<li>在移动网络中，无线信号构成了通信链路。
 <ul>
 <li>在移动网络的设计当中，通信的核心被称之为蜂窝塔，也称做基站。</li>
-</ul>
-</li>
-<li><p>构成移动网络最小的网络（蜂窝网）如下图所示：国家或全球网络提供商将网络提供给处于蜂窝网络边缘的路由器，而路由器再连接蜂窝塔，再通过蜂窝塔提供给六边形区域内的设备。 （通常是国家级别的网络服务提供商负责部署基站：中国电信等等 ）。</p>
+</ul></li>
+<li>构成移动网络最小的网络（蜂窝网）如下图所示：国家或全球网络提供商将网络提供给处于蜂窝网络边缘的路由器，而路由器再连接蜂窝塔，再通过蜂窝塔提供给六边形区域内的设备。
+（通常是国家级别的网络服务提供商负责部署基站：中国电信等等 ）。
 <ul>
 <li>将网络提供给一个子网的行为称为网络提供。（比如运营商给家里装宽带）。</li>
-<li>对一个子网连接提供商的网络，称为网络接入。<br><img src="/img/example/network4.png" srcset="/img/loading.gif" lazyload alt="network1"></li>
+<li>对一个子网连接提供商的网络，称为网络接入。 <img
+src="/img/example/network4.png" srcset="/img/loading.gif" lazyload alt="network1" /></li>
+</ul></li>
+<li>家用网络 移动网络 公司网络的关系 <img
+src="/img/example/network5.png" srcset="/img/loading.gif" lazyload alt="network1" /></li>
 </ul>
-</li>
-<li><p>家用网络 移动网络 公司网络的关系<br><img src="/img/example/network5.png" srcset="/img/loading.gif" lazyload alt="network1"></p>
-</li>
-</ul>
-<h1 id="数据的传输"><a href="#数据的传输" class="headerlink" title="数据的传输"></a>数据的传输</h1><p>上述的网络中有庞大的个人公司组织基站形成的网络，在这些网络当中传递数据不是一件容易的事，为了传递数据，在网络当中有几个特别重要的抽象</p>
-<ul>
-<li>最终提供服务或者享受服务的设备：终端（Terminal）、端系统（End System）、主机（Host）。</li>
-</ul>
-<p>网络传输可以分为两类：</p>
-<ul>
-<li>端到端（Host to Host）的能力，又 TCP&#x2F;IP 协议群提供</li>
-<li>一对多、多对多的能力，是端到端（Host to Host）能力的延生<br>想象一下，一个北京的 Host 向深圳的 Host 发送消息，那么中间会穿越大量的网络节点（路由器、交换机、基站），在发送消息的过程当中可能会跨越很多个网络，通过很多个网络边缘，可能会通过不同的网络提供商提供的网络，而且传输过程中可能还会有不同材质的通信链路（同轴电缆、双绞线、光纤、或者无线传输的 Wi-Fi、卫星）。</li>
-</ul>
-<p>网络基础设施往往不能一次性传输太大的数据量，通常会将数据分片传输，比如传输一个 MP3，会将 MP3 内容且分成很多个组，每个组称作为一个封包，这样其中一个封包损坏，就只需重发损坏的封包，而不需要重发所有的数据。<br>另一方面，网络中两点的路径是非常多的，如果一条路径阻塞了，部分封包可以考虑走其他路径，发送端将数据拆分成封包，封包在网络中遇到岔路，有交换机或路由器节点决定走向。<br><img src="/img/example/network6.png" srcset="/img/loading.gif" lazyload alt="network1"></p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>互联网是一个庞大的结构：整体来看，互联网是一个立体的、庞大的网状结构；微观层面：一个个网络、一台台设备。</p>
+<h1 id="数据的传输">数据的传输</h1>
+<p>上述的网络中有庞大的个人公司组织基站形成的网络，在这些网络当中传递数据不是一件容易的事，为了传递数据，在网络当中有几个特别重要的抽象
+- 最终提供服务或者享受服务的设备：终端（Terminal）、端系统（End
+System）、主机（Host）。</p>
+<p>网络传输可以分为两类： - 端到端（Host to Host）的能力，又 TCP/IP
+协议群提供 - 一对多、多对多的能力，是端到端（Host to Host）能力的延生
+想象一下，一个北京的 Host 向深圳的 Host
+发送消息，那么中间会穿越大量的网络节点（路由器、交换机、基站），在发送消息的过程当中可能会跨越很多个网络，通过很多个网络边缘，可能会通过不同的网络提供商提供的网络，而且传输过程中可能还会有不同材质的通信链路（同轴电缆、双绞线、光纤、或者无线传输的
+Wi-Fi、卫星）。</p>
+<p>网络基础设施往往不能一次性传输太大的数据量，通常会将数据分片传输，比如传输一个
+MP3，会将 MP3
+内容且分成很多个组，每个组称作为一个封包，这样其中一个封包损坏，就只需重发损坏的封包，而不需要重发所有的数据。
+另一方面，网络中两点的路径是非常多的，如果一条路径阻塞了，部分封包可以考虑走其他路径，发送端将数据拆分成封包，封包在网络中遇到岔路，有交换机或路由器节点决定走向。
+<img src="/img/example/network6.png" srcset="/img/loading.gif" lazyload alt="network1" /></p>
+<h1 id="总结">总结</h1>
+<p>互联网是一个庞大的结构：整体来看，互联网是一个立体的、庞大的网状结构；微观层面：一个个网络、一台台设备。</p>
 
                 
               </div>
