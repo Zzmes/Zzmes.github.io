@@ -4,7 +4,84 @@
   
   
   <entry>
-    <title>UDP协议：TCP 协议和 UDP 协议的优势和劣势</title>
+    <title>Linux 多进程、多线程、IO 模型(一)</title>
+    <link href="/2024/10/11/c-thread/"/>
+    <url>/2024/10/11/c-thread/</url>
+    
+    <content type="html"><![CDATA[<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><h2 id="进程的概念"><a href="#进程的概念" class="headerlink" title="进程的概念"></a>进程的概念</h2><p>进程描述是一个程序执行过程，当程序执行后，执行过程开始，则进程产生, 执行过程结束, 则进程也就结束。</p><h2 id="进程的特点"><a href="#进程的特点" class="headerlink" title="进程的特点"></a>进程的特点</h2><ul><li>进程是一个独立的可调度的活动, 由操作系统进行统一调度, 相应的任务会被调度到 CPU 中进行执行；</li><li>进程一旦产生，则需要分配相关资源，同时进程是资源分配的最小单位；</li></ul><h2 id="进程和程序的区别"><a href="#进程和程序的区别" class="headerlink" title="进程和程序的区别"></a>进程和程序的区别</h2><ul><li>程序是静态的，它是一些保存在磁盘上的指令的有序集合，没有任何执行的概念；</li><li>进程是一个动态的概念，它是程序执行的过程，包括了动态创建、调度和消亡的整个过程</li></ul><h2 id="并行执行和并发执行"><a href="#并行执行和并发执行" class="headerlink" title="并行执行和并发执行"></a>并行执行和并发执行</h2><ul><li>并行执行: 表示多个任务能够同时执行，依赖于物理的支持，比如 cpu 是 4 核心，则可以同时执行 4 个任务</li><li>并发执行: 在同一时间段有多个任务在同时执行，由操作系统调度算法来实现，比较典型的就是时间片轮转<br><img src="/img/example/C_CPP/C_1.png" alt="network1"></li></ul><h2 id="Linux-系统中管理进程的方式"><a href="#Linux-系统中管理进程的方式" class="headerlink" title="Linux 系统中管理进程的方式"></a>Linux 系统中管理进程的方式</h2><ul><li>每个进程都需要与其他某一个进程建立父子关系, 对应的进程则叫做父进程；</li><li>Linux 系统会为每个进程分配 id , 这个 id 作为当前进程的唯一标识, 当进程结束, 则会回收；</li><li>进程的 id 与 父进程的 id 分别通过 getpid() 与 getppid() 来获取<ul><li>例如以下代码就是获取当前进程 id 以及父进程 id：  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; pid : %d ppid : %d\n&quot;</span>,getpid(),getppid());<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure></li></ul></li></ul><h1 id="进程的地址空间"><a href="#进程的地址空间" class="headerlink" title="进程的地址空间"></a>进程的地址空间</h1><h2 id="进程的地址空间-1"><a href="#进程的地址空间-1" class="headerlink" title="进程的地址空间"></a>进程的地址空间</h2><ul><li><p>一旦进程建立之后, 系统则要为这个进程分配相应的资源, 一般 32 位系统会为每个进程分配 4G 的地址空间；</p><ul><li>4G 的地址空间结构如下:<img src="/img/example/C_CPP/C_2.png" alt="network1"><ul><li>4G 的进程地址空间主要分为两部分: <ul><li>（1）0 - 3G: 用户空间; </li><li>（2）3G - 4G: 内核空间;</li></ul></li><li>用户空间又具体分为如下区间:<ul><li>stack: 存放非静态的局部变量</li><li>heap: 动态申请的内存</li><li>.bss: 未初始化过的全局变量（包括初始化为 0 的, 未初始化过的静态变量 (包括初始化为 0)</li><li>data: 初始化过并且值不为 0 的全局变量, 初始化过的不为 0 静态变量</li><li>.rodata: 只读变量（字符串之类）</li><li>.text: 程序文本段（包括函数，符号常量）</li></ul></li></ul></li></ul></li><li><p>当用户进程需要通过内核获取资源时, 会切换到内核态运行, 这时当前进程会使用内核空间的资源；</p></li><li><p>用户需要切换到内核态运行时, 主要是通过 系统调用</p></li><li><p>在程序执行过程中，操作系统会分配 4G 的虚拟地址空间</p></li><li><p>虚拟地址空间中的每个地址都是一个虚拟地址</p><ul><li>虚拟地址：虚拟地址并不代表真实的内存空间, 而是一个用于寻址的编号</li><li>物理地址：是指内存设备中真实存在的存储空间的编号</li></ul></li><li><p>虚拟地址通过映射的方式建立与物理地址的关联, 从而达到访问虚拟地址就可以访问到对应的物理地址</p><ul><li>在 cpu 中有一个硬件 MMU(内存管理单元), 负责虚拟地址与物理地址的映射管理以及虚拟地址访问</li><li>操作系统可以设置 MMU 中的映射内存段<img src="/img/example/C_CPP/C_3.png" alt="network1"></li></ul></li><li><p>在操作系统中使用虚拟地址空间主要是基于以下原因:</p><ul><li>直接访问物理地址, 会导致地址空间没有隔离, 很容易导致数据被修改</li><li>通过虚拟地址空间可以实现每个进程地址空间都是独立的，操作系统会映射到不用的物理地址区间，在访问时互不干扰</li></ul></li></ul><h1 id="进程的状态管理"><a href="#进程的状态管理" class="headerlink" title="进程的状态管理"></a>进程的状态管理</h1><ul><li>进程是动态过程，操作系统内核在管理整个动态过程时会使用了状态机<ul><li>给不同时间节点设计一个状态，通过状态来确定当前的过程进度</li><li>在管理动态过程时，使用状态机是一种非常好的方式</li></ul></li><li>进程的状态一般分为如下:<ul><li>运行态 (TASK_RUNNING): 此时进程或者正在运行，或者准备运行, 就绪或者正在进行都属于运行态</li><li>睡眠态 (): 此时进程在等待一个事件的发生或某种系统资源<ul><li>可中断的睡眠 (TASK_INTERRUPT): 可以被信号唤醒或者等待事件或者资源就绪</li><li>不可中断的睡眠 (TASK_UNTERRUPT): 只能等待特定的事件或者资源就绪</li></ul></li><li>停止态 (TASK_STOPPED): 进程暂停接受某种处理。例如：gdb 调试断点信息处理。</li><li>僵尸态（TASK_ZOMBIE）:进程已经结束但是还没有释放进程资源<img src="/img/example/C_CPP/C_4.png" alt="network1"></li></ul></li></ul><h1 id="进程的相关命令"><a href="#进程的相关命令" class="headerlink" title="进程的相关命令"></a>进程的相关命令</h1><ul><li>ps:<ul><li>-A:列出所有的进程</li><li>-e: 与 -A 功能类似</li><li>-w: 显示加宽可以显示较多的资讯</li><li>-au: 显示较详细的信息</li><li>-aux: 显示所有包含其他使用者的进程<br>事例：ps -ef | grep “可执行文件名” 根据名称查找指定名字</li></ul></li><li>top：实时显示相关进程</li></ul><h1 id="进程的创建"><a href="#进程的创建" class="headerlink" title="进程的创建"></a>进程的创建</h1><ul><li>为了提高计算机执行任务的效率，一般采用的解决方案就是能够让多个任务同时进行，这里可以使用并发与并行两种方式：<ul><li>并行: 在 cpu 多核的支持下，实现物理上的同时执行</li><li>并发: 在有限的 cpu 核心的情况下（如只有一个 cpu 核心）, 利用快速交替 (时间片轮转) 执行来达到宏观上的同时执行</li></ul></li><li>并行是基于硬件完成，而并发则可以使用软件算法来完成, 在完成任务时，可以创建多个进程并发执行</li><li>创建进程的函数需要调用 fork() 函数, 则会产生一个新的进程</li><li>调用 fork() 函数的进程叫做 父进程，产生的新进程则为子进程</li></ul><h2 id="fork-函数详解"><a href="#fork-函数详解" class="headerlink" title="fork()函数详解"></a>fork()函数详解</h2><ul><li>函数头文件：  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br></code></pre></td></tr></table></figure></li><li>函数原型  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">pid_t</span> <span class="hljs-title function_">fork</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;<br></code></pre></td></tr></table></figure></li><li>函数功能：创建一个子进程</li><li>函数返回值：<ul><li>成功: 返回给父进程是子进程的 pid , 返回给子进程的是 0</li><li>失败: 返回 -1, 并设置 errno</li></ul></li></ul><p>示例：</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>    <span class="hljs-type">pid_t</span> cpid;<br>    cpid = fork();<br>    <span class="hljs-keyword">if</span> (cpid == <span class="hljs-number">-1</span>)&#123;<br>        perror(<span class="hljs-string">&quot;fork(): &quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello world.\n&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-comment">// 输出两个 Hello world</span><br>&#125;<br></code></pre></td></tr></table></figure><ul><li>之所以 显示两个 “helloworld” 是因为打印语句在两个进程中都运行了,但是是父进程先执行还是子进程先执行取决于操作系统</li></ul><p>示例 : 创建一个子进程，并打印 父进程与子进程的 pid：</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-type">static</span> <span class="hljs-type">int</span> idata = <span class="hljs-number">200</span>;<br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>    <span class="hljs-type">pid_t</span> pid;<br>    <span class="hljs-type">int</span> istack = <span class="hljs-number">300</span>;<br>    pid = fork();<br>    <span class="hljs-keyword">if</span> (pid &lt; <span class="hljs-number">0</span>)<br>    &#123;<br>        perror(<span class="hljs-string">&quot;fork():&quot;</span>);<br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">-1</span>);<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>)<br>    &#123;<br>        idata *= <span class="hljs-number">2</span>;<br>        istack *= <span class="hljs-number">3</span>;<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; %s %d %d\n&quot;</span>,(pid == <span class="hljs-number">0</span>)?(<span class="hljs-string">&quot;child&quot;</span>):(<span class="hljs-string">&quot;parent&quot;</span>),idata,istack);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><ul><li>通过 fork() 函数创建子进程之后，有如下特点:<ul><li>父子进程并发执行, 子进程从 fork() 之后开始执行<img src="/img/example/C_CPP/C_5.png" alt="network1"></li><li>父子进程的执行顺序由操作系统算法决定的，不是由程序本身决定</li><li>子进程会拷⻉父进程地址空间的内容, 包括缓冲区、文件描述符等<img src="/img/example/C_CPP/C_6.png" alt="network1"></li></ul></li></ul><p>示例:</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>    <span class="hljs-type">pid_t</span> cpid;<br>    write(STDOUT_FILENO,<span class="hljs-string">&quot;Hello&quot;</span>,<span class="hljs-number">6</span>);<br>    <span class="hljs-built_in">fputs</span>(<span class="hljs-string">&quot;Hello&quot;</span>,<span class="hljs-built_in">stdout</span>);<br>    cpid = fork();<br>    <span class="hljs-keyword">if</span> (cpid == <span class="hljs-number">-1</span>)&#123;<br>    perror(<span class="hljs-string">&quot;fork(): &quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>&#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><p>上面的代码最终会打印三次 Hello</p><ul><li>文件描述符拷⻉:<ul><li>每个进程都会维护一个文件表项，即文件描述符与文件指针的映射表</li><li>在 Linux 内核中有一个 struct file 结构体来管理所有打开的文件</li><li>当子进程拷⻉了父进程文件描述符后，则会共享文件状态标志与文件偏移量等信息![network1](&#x2F;img&#x2F;example&#x2F;C_CPP&#x2F;C_7 .png)</li></ul></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>C 语言基础</category>
+      
+      <category>嵌入式应用层开发</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>嵌入式应用层开发</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>计算机网络速通(七) 路由和寻址的区别是什么</title>
+    <link href="/2024/10/09/network7/"/>
+    <url>/2024/10/09/network7/</url>
+    
+    <content type="html"><![CDATA[<p>IP 协议是网络层协议，IP 协议并不负责数据的可靠性，传输数据时，数据被拆分成一个个数据封包，IP 协议上方的传输层协议会对数据进行一次拆分，IP 协议还会进一步拆分，进行两次拆分的原因是为了适配底层的设备。</p><p>之前我们提到过，数据在网络中交换，也就是封包交换算法，并不需要预先建立一个连接，而是任由数据在网络中传输，每个节点通过路由算法帮助封包选择下一个目的地。</p><p>什么是可靠性？—— 可靠性就是保证数据无损地到达目的地。可靠性是 IP 协议上方（Host to Host）协议保证的。比如 TCP 协议通过应答机制，窗口等保证数据的可靠性。IP 协议自身不能保证可靠性，因此 IP 协议可能会出现以下问题：</p><ul><li>封包损坏：数据传输过程中被损坏；</li><li>丢包：数据发送过程中都是；</li><li>重发：数据被重发，比如中间设备通过两个路径传递数据；</li><li>乱序：到达目的地时数据和发送数据不一致；</li></ul><p>但是 IP 协议不会去处理这些问题，因为网络层只专注网络层的问题，而且不同特性的应用在不同场景下需要解决的问题不一样。对于网络层，这里有三个问题需要解决：延迟、吞吐量、丢包率。</p><h1 id="IP-协议的工作原理："><a href="#IP-协议的工作原理：" class="headerlink" title="IP 协议的工作原理："></a>IP 协议的工作原理：</h1><p>IP 协议接受 IP 协议上方的传输层协议会对数据进行一次拆分，这个能力叫做分片。然后 IP 协议为每个分片增加 IP 头，组成一个 IP 封包，之后 IP 协议调用底层的局域网，也就是数据链路层去传输数据。最后 IP 协议通过寻址和路由能力吧封包传输到目的地。</p><h2 id="分片"><a href="#分片" class="headerlink" title="分片"></a>分片</h2><p>分片：是把数据且分成片，IP 协议通过它下层的局域网（链路层）协议传输数据，因此需要适配底层传输网络的传输能力。 </p><p>切片完之后，IP 协议会为每个切片添加协议头，其中分为四个部分：</p><ul><li>原地址和目标地址，IPv4 的地址是四个 8 位的数字，总共 32位。</li><li>Type of service 是服务的类型，是为了响应不同的用户诉求，用来选择延迟、吞吐量和丢包率的搞关系。</li><li>IHL 用来描述 IP 协议头的大小，所以 IP 协议头的大小是可变的。 </li><li>Total length 表示报文的长度<br><img src="/img/example/network7/network7-1.png" alt="network1"></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机网络</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>计算机网络基础</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>计算机网络速通(六) 思考题</title>
+    <link href="/2024/10/09/network6/"/>
+    <url>/2024/10/09/network6/</url>
+    
+    <content type="html"><![CDATA[<h2 id="传输层协议-TCP"><a href="#传输层协议-TCP" class="headerlink" title="传输层协议 TCP"></a>传输层协议 TCP</h2><ul><li>一台内存在 8G 左右的服务器，可以同时维护多少个连接?<ul><li>在 JAVA 程序中，创建 100W 个连接的速度不会很快，说明创建 TCP 连接有成本，需要三次握手，而且这三次握手都有网络的 I&#x2F;0;</li><li>用 jps 找到对应的进程id，在用 sudo cat &#x2F;proc&#x2F;(进程 id)&#x2F;status | grep VmHWM，可以看到实际的内存占用；</li><li>在单机中建立太多的连接，这时会报一个异常：cannot assign requested address，这是因为客户端在连接服务器端时，操作系统要为每个客户端分配一个端口，上面的程序很快会把端口号用尽，</li></ul></li></ul><p>结论：最核心的问题是：通信需要缓冲区，通信需要 I&#x2F;O，通信占用资源，连接本身占用资源少。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机网络</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>计算机网络基础</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>计算机网络速通(五) UDP协议：TCP 协议和 UDP 协议的优势和劣势</title>
     <link href="/2024/10/08/network5/"/>
     <url>/2024/10/08/network5/</url>
     
