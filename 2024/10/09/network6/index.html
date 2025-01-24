@@ -250,7 +250,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          213 字
+          208 字
         
       </span>
     
@@ -322,15 +322,20 @@
             
               <div class="markdown-body">
                 
-                <h2 id="传输层协议-TCP"><a href="#传输层协议-TCP" class="headerlink" title="传输层协议 TCP"></a>传输层协议 TCP</h2><ul>
-<li>一台内存在 8G 左右的服务器，可以同时维护多少个连接?<ul>
-<li>在 JAVA 程序中，创建 100W 个连接的速度不会很快，说明创建 TCP 连接有成本，需要三次握手，而且这三次握手都有网络的 I&#x2F;0;</li>
-<li>用 jps 找到对应的进程id，在用 sudo cat &#x2F;proc&#x2F;(进程 id)&#x2F;status | grep VmHWM，可以看到实际的内存占用；</li>
-<li>在单机中建立太多的连接，这时会报一个异常：cannot assign requested address，这是因为客户端在连接服务器端时，操作系统要为每个客户端分配一个端口，上面的程序很快会把端口号用尽，</li>
+                <h2 id="传输层协议-tcp">传输层协议 TCP</h2>
+<ul>
+<li>一台内存在 8G 左右的服务器，可以同时维护多少个连接?
+<ul>
+<li>在 JAVA 程序中，创建 100W 个连接的速度不会很快，说明创建 TCP
+连接有成本，需要三次握手，而且这三次握手都有网络的 I/0;</li>
+<li>用 jps 找到对应的进程id，在用 sudo cat /proc/(进程 id)/status | grep
+VmHWM，可以看到实际的内存占用；</li>
+<li>在单机中建立太多的连接，这时会报一个异常：cannot assign requested
+address，这是因为客户端在连接服务器端时，操作系统要为每个客户端分配一个端口，上面的程序很快会把端口号用尽，</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p>结论：最核心的问题是：通信需要缓冲区，通信需要 I&#x2F;O，通信占用资源，连接本身占用资源少。</p>
+<p>结论：最核心的问题是：通信需要缓冲区，通信需要
+I/O，通信占用资源，连接本身占用资源少。</p>
 
                 
               </div>
