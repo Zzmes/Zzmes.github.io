@@ -21,25 +21,24 @@
   
     <meta name="description" content="个人 CUDA 学习笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CUDA 编程（一） CPU 与 GPU 的基本知识">
-<meta property="og:url" content="https://zzmes.github.io/2025/01/24/CUDA-1/index.html">
+<meta property="og:title" content="CUDA 编程（二） GPU 编程与 CUDA">
+<meta property="og:url" content="https://zzmes.github.io/2025/01/25/CUDA-2/index.html">
 <meta property="og:site_name" content="zy space">
 <meta property="og:description" content="个人 CUDA 学习笔记">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zzmes.github.io/img/cuda/cpu.png">
-<meta property="og:image" content="https://zzmes.github.io/img/cuda/gpu.png">
-<meta property="article:published_time" content="2025-01-24T12:59:28.000Z">
-<meta property="article:modified_time" content="2025-01-25T12:09:24.750Z">
+<meta property="og:image" content="https://zzmes.github.io/img/cuda/cudapipe.png">
+<meta property="article:published_time" content="2025-01-25T12:59:28.000Z">
+<meta property="article:modified_time" content="2025-01-25T13:27:17.928Z">
 <meta property="article:author" content="YangYangYang">
 <meta property="article:tag" content="CUDA 编程基础">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://zzmes.github.io/img/cuda/cpu.png">
+<meta name="twitter:image" content="https://zzmes.github.io/img/cuda/cudapipe.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>CUDA 编程（一） CPU 与 GPU 的基本知识 - zy space</title>
+  <title>CUDA 编程（二） GPU 编程与 CUDA - zy space</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -224,7 +223,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="CUDA 编程（一） CPU 与 GPU 的基本知识"></span>
+            <span id="subtitle" data-typed-text="CUDA 编程（二） GPU 编程与 CUDA"></span>
           
         </div>
 
@@ -240,8 +239,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-01-24 20:59" pubdate>
-          2025年1月24日 晚上
+        <time datetime="2025-01-25 20:59" pubdate>
+          2025年1月25日 晚上
         </time>
       </span>
     
@@ -253,7 +252,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          480 字
+          278 字
         
       </span>
     
@@ -265,7 +264,7 @@
         
         
           <!-- compatible with older versions-->
-          5 分钟
+          3 分钟
         
       </span>
     
@@ -311,7 +310,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">CUDA 编程（一） CPU 与 GPU 的基本知识</h1>
+            <h1 id="seo-header">CUDA 编程（二） GPU 编程与 CUDA</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
@@ -325,57 +324,30 @@
             
               <div class="markdown-body">
                 
-                <h1 id="重要指标"><a href="#重要指标" class="headerlink" title="重要指标"></a>重要指标</h1><ul>
-<li>延迟：一条指令从发出到返回结果所经历的时间间隔</li>
-<li>吞吐量：单位时间内执行的指令数</li>
-</ul>
-<h1 id="CPU-延迟导向设计"><a href="#CPU-延迟导向设计" class="headerlink" title="CPU:延迟导向设计"></a>CPU:延迟导向设计</h1><p><img src="/img/cuda/cpu.png" srcset="/img/loading.gif" lazyload alt="CPU"></p>
+                <h1 id="CUDA-编程并行计算整体流程"><a href="#CUDA-编程并行计算整体流程" class="headerlink" title="CUDA 编程并行计算整体流程"></a>CUDA 编程并行计算整体流程</h1><p><img src="/img/cuda/cudapipe.png" srcset="/img/loading.gif" lazyload alt="CUDAPipe"></p>
 <ul>
-<li>CPU 设计原则：减少延迟</li>
-<li>CPU 特点：<ul>
-<li>内存大：本着空间换时间的原则，拥有多级缓存结构提高访存速度（L1 Cache、L2 Cache…），把经常访问的数据放在低级缓存 L1 Cache中，不常访问的数据放在高级缓存 L3 Cache中</li>
-<li>有很多复杂的控制单元：<ul>
-<li>分支预测机制 –&gt; 在硬件中判断语言的 if else break continue 执行；</li>
-<li>流水线数据前送机制 –&gt; 判断如果马上要访问的数据，会用流水线机制把数据尽可能向前推送，减少等待时间</li>
+<li>从主机端申请内存，把内存的部分内容拷贝到设备端（GPU）</li>
+<li>CPU 调度在设备端的核函数计算（异步）—&gt; 核函数：设备段执行的函数</li>
+<li>从设备端拷贝到主机端，并释放内存显存</li>
 </ul>
-</li>
-<li>运算单元强大：<ul>
-<li>支持整型、浮点型数据运算</li>
-<li>支持与、或、非、逻辑运算</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="GPU-吞吐量导向设计"><a href="#GPU-吞吐量导向设计" class="headerlink" title="GPU:吞吐量导向设计"></a>GPU:吞吐量导向设计</h1><p><img src="/img/cuda/gpu.png" srcset="/img/loading.gif" lazyload alt="GPU"></p>
+<h1 id="CUDA-内存模型"><a href="#CUDA-内存模型" class="headerlink" title="CUDA 内存模型"></a>CUDA 内存模型</h1><ul>
+<li><p>CUDA 中的内存模型分为以下几个层次（硬件）：</p>
 <ul>
-<li>GPU 设计原则：增加指令吞吐</li>
-<li>GPU 特点：<ul>
-<li>缓存小（如图 L2 Cache）：<ul>
-<li>缓存小 –&gt; 指令访问缓存的次数显著减少 –&gt; 提升内存访问吞吐</li>
+<li>每个线程处理器（SP）都有自己的寄存器</li>
+<li>每个 SP 都有自己的局部内存，寄存器和局部内存只能被线程自己访问</li>
+<li>每个多核处理器（SM）内都有自己的共享内存，共享内存可以被线程块内（block）所有线程访问</li>
+<li>一个 GPU 的所有 SM 共有一块全局内存，不同线程块的线程都可以使用</li>
 </ul>
 </li>
-<li>控制单元简单：<ul>
-<li>没有分支预测机制</li>
-<li>没有数据转发机制</li>
+<li><p>CUDA 中的内存模型分为以下几个层次（软件）：</p>
+<ul>
+<li>线程处理器（SP）对应线程（thread）</li>
+<li>多核处理器（SM）对应线程块（block）</li>
+<li>设备端（device）对应网格（grid）</li>
+<li>一个 kernel 其实由一个 grid 执行</li>
+<li>一个 kernel 一次只能在一个 GPU 上执行</li>
 </ul>
 </li>
-<li>精简运算单元<ul>
-<li>多长延时流水线以提高吞吐量（一行很多运算单元）</li>
-<li>需要大量线程来容忍延迟（每一行的运算单元控制指令只有一个）</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="GPU-与-CPU-对比"><a href="#GPU-与-CPU-对比" class="headerlink" title="GPU 与 CPU 对比"></a>GPU 与 CPU 对比</h1><ul>
-<li>CPU 比 GPU，单条复杂指令延迟快 10 倍以上</li>
-<li>GPU 比 CPU，单位时间内执行指令数量快 10 倍以上</li>
-</ul>
-<h1 id="适合使用-GPU-的场景"><a href="#适合使用-GPU-的场景" class="headerlink" title="适合使用 GPU 的场景"></a>适合使用 GPU 的场景</h1><ul>
-<li>计算密集的程序适合在 GPU: 数值计算的比例要远大于内存操作，因此内存访问的延迟可以被计算覆盖</li>
-<li>并行度高的程序适合在 GPU: 大任务可以拆分为执行相同指令的小任务，对复杂流程控制的需求较低</li>
-<li>控制复杂的程序</li>
 </ul>
 
                 
@@ -436,8 +408,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>CUDA 编程（一） CPU 与 GPU 的基本知识</div>
-      <div>https://zzmes.github.io/2025/01/24/CUDA-1/</div>
+      <div>CUDA 编程（二） GPU 编程与 CUDA</div>
+      <div>https://zzmes.github.io/2025/01/25/CUDA-2/</div>
     </div>
     <div class="license-meta">
       
@@ -449,7 +421,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年1月24日</div>
+          <div>2025年1月25日</div>
         </div>
       
       
@@ -481,18 +453,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/01/25/CUDA-2/" title="CUDA 编程（二） GPU 编程与 CUDA">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">CUDA 编程（二） GPU 编程与 CUDA</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/10/14/Embedded-4/" title="嵌入式系统学习（四）：文件 IO">
-                        <span class="hidden-mobile">嵌入式系统学习（四）：文件 IO</span>
+                      <a href="/2025/01/24/CUDA-1/" title="CUDA 编程（一） CPU 与 GPU 的基本知识">
+                        <span class="hidden-mobile">CUDA 编程（一） CPU 与 GPU 的基本知识</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
