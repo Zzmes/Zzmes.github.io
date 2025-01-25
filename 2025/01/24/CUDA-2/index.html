@@ -19,31 +19,26 @@
   <meta name="author" content="YangYangYang">
   <meta name="keywords" content="blog">
   
-    <meta name="description" content="Linux 文件 IO">
+    <meta name="description" content="个人 CUDA 学习笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="嵌入式系统学习（四）：文件 IO">
-<meta property="og:url" content="https://zzmes.github.io/2024/10/14/Embedded-4/index.html">
+<meta property="og:title" content="CUDA 编程（二） GPU 编程与 CUDA">
+<meta property="og:url" content="https://zzmes.github.io/2025/01/24/CUDA-2/index.html">
 <meta property="og:site_name" content="zy space">
-<meta property="og:description" content="Linux 文件 IO">
+<meta property="og:description" content="个人 CUDA 学习笔记">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zzmes.github.io/img/embeding/emb-1.png">
-<meta property="og:image" content="https://zzmes.github.io/img/embeding/emb-2.png">
-<meta property="og:image" content="https://zzmes.github.io/img/embeding/emb-2.png">
-<meta property="og:image" content="https://zzmes.github.io/img/embeding/emb-4.png">
-<meta property="og:image" content="https://zzmes.github.io/img/embeding/emb-5.png">
-<meta property="og:image" content="https://zzmes.github.io/img/embeding/emb-6.png">
-<meta property="article:published_time" content="2024-10-14T05:58:01.000Z">
-<meta property="article:modified_time" content="2024-10-14T13:13:37.878Z">
+<meta property="og:image" content="https://zzmes.github.io/img/cuda/cudapipe.png">
+<meta property="article:published_time" content="2025-01-24T12:59:28.000Z">
+<meta property="article:modified_time" content="2025-01-25T13:26:48.530Z">
 <meta property="article:author" content="YangYangYang">
-<meta property="article:tag" content="嵌入式">
+<meta property="article:tag" content="CUDA 编程基础">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://zzmes.github.io/img/embeding/emb-1.png">
+<meta name="twitter:image" content="https://zzmes.github.io/img/cuda/cudapipe.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>嵌入式系统学习（四）：文件 IO - zy space</title>
+  <title>CUDA 编程（二） GPU 编程与 CUDA - zy space</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -228,7 +223,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="嵌入式系统学习（四）：文件 IO"></span>
+            <span id="subtitle" data-typed-text="CUDA 编程（二） GPU 编程与 CUDA"></span>
           
         </div>
 
@@ -244,8 +239,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-10-14 13:58" pubdate>
-          2024年10月14日 下午
+        <time datetime="2025-01-24 20:59" pubdate>
+          2025年1月24日 晚上
         </time>
       </span>
     
@@ -257,7 +252,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          2.4k 字
+          278 字
         
       </span>
     
@@ -269,7 +264,7 @@
         
         
           <!-- compatible with older versions-->
-          20 分钟
+          3 分钟
         
       </span>
     
@@ -315,13 +310,13 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">嵌入式系统学习（四）：文件 IO</h1>
+            <h1 id="seo-header">CUDA 编程（二） GPU 编程与 CUDA</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
                     <!-- compatible with older versions-->
-                    本文最后更新于：2024年10月14日 晚上
+                    本文最后更新于：2025年1月25日 晚上
                   
                 
               </p>
@@ -329,62 +324,31 @@
             
               <div class="markdown-body">
                 
-                <h1 id="day01">Day01</h1>
-<h2 id="计算机组成部分">计算机组成部分</h2>
-<h3 id="硬件系统">硬件系统</h3>
-<p>计算机的硬件主要是由五部分组成：控制器、运算器、存储器、输入设备、输出设备。其中运算器和控制器的总称是中央处理器（CPU），指的是计算机中对信息进行高速运算处理的主要部件。</p>
-<p>存储器则是用来存储程序、数据和文件，一般是由快速的内部存储器（容量可达数百兆字节，甚至数G字节）和慢速的外部存储器（容量可达数十G或数百G以上）组成，比如计算机中的内存条和固态硬件就属于存储器。
-<img src="/img/embeding/emb-1.png" srcset="/img/loading.gif" lazyload alt="计算机组成部分" />
-输入设备与输出设备就是用于实现人机交互的信息转换器，由计算机的输入输出控制系统负责管理外部设备与主存储器之间的信息交换，常用的输入设备主要有键盘以及鼠标，输出设备则是显示器、打印机以及其他可连接到计算机上的I/O设备。</p>
-<h3 id="软件系统">软件系统</h3>
-<p>如果计算机只有硬件系统，那么计算机是无法正常工作的，因为计算机是由基本的电子元件组成的，而电子元件的状态是需要由软件来控制的，所以计算机必须要搭载软件系统，计算机的软件系统与硬件系统是互相依赖的。</p>
-<p>计算机的软件系统一般由两部分组成：系统软件、应用软件。系统软件指的是计算机中的操作系统以及硬件驱动程序等，应用软件指的是用户可以使用的各种程序设计语言以及利用程序设计语言设计的应用程序的集合。</p>
-<h3 id="文件系统">文件系统</h3>
-<p>计算机的系统软件和应用软件其实都是大量的程序和数据组成的，也就是说两者都需要存储在计算机的存储器中，这些程序和数据以什么样的格式存储到存储器中就由文件系统决定。</p>
-<p>大家可以把文件系统理解为是一种“标准”或者“格式”，只要遵循这套标准就可以正确的访问存储在磁盘中的数据。</p>
-<p>当然，标准的制定则是至关重要，但是由于技术原因或者商业利益考虑，导致现在文件系统没有办法统一。所以目前存在多种文件系统，常见的有FAT32、NTFS、ext4......，比如电脑的本地磁盘的文件系统就是NTFS格式。</p>
-<p>Linux系统也支持多种文件系统类型，可以在Linux系统根目录的/proc目录下查阅filesystems
-<img src="/img/embeding/emb-2.png" srcset="/img/loading.gif" lazyload alt="Linux 支持的文件系统格式" /></p>
-<p>计算机中搭载的Linux操作系统就属于系统软件，操作系统的作用是用来连接应用软件和底层硬件，因为涉及到Linux内核的安全管理机制，所以用户空间是没有办法直接访问硬件设备的。
-<img src="/img/embeding/emb-2.png" srcset="/img/loading.gif" lazyload /></p>
-<p>那么用户必须要通过Linux内核提供的相关函数接口才能实现硬件的控制，这样用户也不需要关心硬件应该如何控制，只需要把参数提交给内核，然后由内核把控制参数传递给硬件设备，从而让内核控制硬件设备完成相关动作。</p>
-<p>也正因如此，用户需要先利用程序设计语言设计出源文件（xxx.c），然后操作系统内核需要从磁盘中访问源文件，再通过编译器把源文件编译生成可执行文件，最后内核再访问存储在磁盘中的可执行文件，从而把控制硬件的参数读取出来。</p>
-<p>所以访问磁盘中的文件也是操作系统要做的工作之一。所以操作系统和文件系统可以理解为一种“合作”关系，文件系统指定了读写文件的标准，而操作系统会按照这套标准去完成访问文件的动作。</p>
-<h3 id="linux系统的目录">Linux系统的目录</h3>
-<h4 id="根文件系统说明">根文件系统说明</h4>
-<p>需要注意：Linux系统是离不开文件系统的，在Linux内核启动之后首先搭载的就是根文件系统rootfs，根文件系统rootfs本质就是文件系统，只不过是Linux内核挂载的第一个文件系统。而Linux内核源码是存储在文件系统中，所以在linux系统启动的过程中启动引导程序uboot会加载内核并利用内核挂载根文件系统。
-<img src="/img/embeding/emb-4.png" srcset="/img/loading.gif" lazyload /></p>
-<p>根文件系统被挂载之后，一些服务程序和一些脚本文件才可以存储在文件系统中，其他的文件系统才可以被挂载。</p>
-<p>根文件系统会提供一些服务：比如根文件系统会提供一个根目录（存储文件和目录）、提供一个shell终端（用户才可以输入命令）、根文件系统会存储应用程序。总而言之，Linux内核离开根文件系统是无法正常工作的。</p>
-<p><img src="/img/embeding/emb-5.png" srcset="/img/loading.gif" lazyload />
-Linux系统的所有程序和数据都是以“文件”的形式存储在文件系统中，所有Linux
-用户和程序看到的文件、目录、软连接及文件保护信息等都存储在其中。这种机制有利于用户和操作系统的交互，这也是Linux系统“一切皆文件”的原因。</p>
-<p>其实就是借鉴了Unix系统的设计风格，体现了面向对象的设计思想，把脚本、文档、硬件设备等都抽象为文件对象，再通过统一的POSIX操作接口对文件进行操作，简化了操作难度。</p>
-<h4 id="目录的结构分析">目录的结构分析</h4>
-<p>在 Linux
-操作系统中，所有的文件和目录都被组织成以一个根节点“/”开始的倒置的树状结构。如下图：
-<img src="/img/embeding/emb-6.png" srcset="/img/loading.gif" lazyload /></p>
-<p>文件系统的最顶层是由根目录开始的，系统使用“/”来表示根目录，在根目录之下的既可以是目录（目录就相当于
-Windows
-中的文件夹），也可以是文件，而每一个目录中又可以包含（子）目录或文件。如此反复就可以构成一个庞大的文件系统。</p>
-<p>使用这种树状、具有层次的文件结构主要目的是方便文件系统的管理和维护，想象一下，如果所有的文件都放在一个目录下，其文件系统的管理和维护将变成一场噩梦。</p>
-<p>同样，为了方便观察Linux系统的目录结构，所以Linux内核也提供了一个shell命令：tree，该命令可以以树状结构打印出目录的层次，当然，tree命令需要在Linux系统中提前安装。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span>  apt-get  install  tree	<br></code></pre></td></tr></table></figure>
-<h4 id="linux的文件类型">Linux的文件类型</h4>
-<p>由于程序和数据在Linux系统中都是以文件的形式存在，那不同格式的数据所对应的文件类型也各不相同，在Linux系统下可以把文件的类型分为以下七种：
-1) 普通文件 ：存在于外部存储器中，用于存储普通数据。 2) 目录文件
-：用于存放目录项，是文件系统管理的重要文件类型。 3) 管道文件
-：一种用于进程间通信的特殊文件，也称为命名管道FIFO。 4) 套接字文件
-：一种用于网络间通信的特殊文件。 5) 链接文件
-：用于间接访问另外一个目标文件，相当于windows快捷方式。 6)
-字符设备文件：字符设备在应用层的访问接口。 7) 块设备文件
-：块设备在应用层的访问接口。</p>
-<h4 id="文件操作接口说明">文件操作接口说明</h4>
-<p>上面提到数据都是以文件的形式存储在Linux系统中，并且Linux系统为了简化不同类型文件的操作流程，在设计访问接口时也遵循POSIX标准，而POSIX标准就是对不同操作系统的访问接口做出统一的规范，目的是提高程序的兼容性和可移植性。</p>
-<p>大家经常使用的C语言同样具有语法标准，并且C语言标准在发布的时候也会发布对应的库函数提供给用户。这些库函数也同样遵循POSIX标准进行设计，而遵循POSIX标准设计出来的函数的集合也被称为标准库，比如大家使用的标准C库中提供了标准的输入输出函数，这些函数在Linux系统可以使用，同样也可以在Windows系统中使用。用户可以根据标准输入输出头文件&lt;stdio.h&gt;中的函数声明进行调用，Linux系统下该头文件路径为
-/usr/include。</p>
-<p>另外，由于任何一种操作系统都会有访问磁盘文件的需求，所以POSIX标准中同样对访问文件的输入输出接口做出了约束，这些访问文件的函数接口在C语言标准中都有具体的描述。</p>
-<p>标准C库中关于文件输入输出的函数接口一般被称为标准IO，访问文件常用的标准IO函数有fopen()、fread()、fwrite()、fclose()、fgetc()、fputc()、fgets()、fputs()、fprintf()、fscanf()等。</p>
+                <h1 id="CUDA-编程并行计算整体流程"><a href="#CUDA-编程并行计算整体流程" class="headerlink" title="CUDA 编程并行计算整体流程"></a>CUDA 编程并行计算整体流程</h1><p><img src="/img/cuda/cudapipe.png" srcset="/img/loading.gif" lazyload alt="CUDAPipe"></p>
+<ul>
+<li>从主机端申请内存，把内存的部分内容拷贝到设备端（GPU）</li>
+<li>CPU 调度在设备端的核函数计算（异步）—&gt; 核函数：设备段执行的函数</li>
+<li>从设备端拷贝到主机端，并释放内存显存</li>
+</ul>
+<h1 id="CUDA-内存模型"><a href="#CUDA-内存模型" class="headerlink" title="CUDA 内存模型"></a>CUDA 内存模型</h1><ul>
+<li><p>CUDA 中的内存模型分为以下几个层次（硬件）：</p>
+<ul>
+<li>每个线程处理器（SP）都有自己的寄存器</li>
+<li>每个 SP 都有自己的局部内存，寄存器和局部内存只能被线程自己访问</li>
+<li>每个多核处理器（SM）内都有自己的共享内存，共享内存可以被线程块内（block）所有线程访问</li>
+<li>一个 GPU 的所有 SM 共有一块全局内存，不同线程块的线程都可以使用</li>
+</ul>
+</li>
+<li><p>CUDA 中的内存模型分为以下几个层次（软件）：</p>
+<ul>
+<li>线程处理器（SP）对应线程（thread）</li>
+<li>多核处理器（SM）对应线程块（block）</li>
+<li>设备端（device）对应网格（grid）</li>
+<li>一个 kernel 其实由一个 grid 执行</li>
+<li>一个 kernel 一次只能在一个 GPU 上执行</li>
+</ul>
+</li>
+</ul>
 
                 
               </div>
@@ -403,13 +367,20 @@ Windows
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="category-chain-item">嵌入式</a>
+  <a href="/categories/CUDA-%E4%B8%8E-TensorRT-%E9%83%A8%E7%BD%B2/" class="category-chain-item">CUDA 与 TensorRT 部署</a>
   
   
     <span>></span>
     
-  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/Linux-%E6%96%87%E4%BB%B6-IO/" class="category-chain-item">Linux 文件 IO</a>
+  <a href="/categories/CUDA-%E4%B8%8E-TensorRT-%E9%83%A8%E7%BD%B2/CUDA/" class="category-chain-item">CUDA</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/CUDA-%E4%B8%8E-TensorRT-%E9%83%A8%E7%BD%B2/CUDA/TensorRT/" class="category-chain-item">TensorRT</a>
+  
+  
+
   
 
   
@@ -425,7 +396,7 @@ Windows
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="print-no-link">#嵌入式</a>
+        <a href="/tags/CUDA-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/" class="print-no-link">#CUDA 编程基础</a>
       
     </div>
   
@@ -437,8 +408,8 @@ Windows
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>嵌入式系统学习（四）：文件 IO</div>
-      <div>https://zzmes.github.io/2024/10/14/Embedded-4/</div>
+      <div>CUDA 编程（二） GPU 编程与 CUDA</div>
+      <div>https://zzmes.github.io/2025/01/24/CUDA-2/</div>
     </div>
     <div class="license-meta">
       
@@ -450,7 +421,7 @@ Windows
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年10月14日</div>
+          <div>2025年1月24日</div>
         </div>
       
       
@@ -482,9 +453,9 @@ Windows
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/01/24/CUDA-2/" title="CUDA 编程（二） GPU 编程与 CUDA">
+                      <a href="/2025/01/24/CUDA-1/" title="CUDA 编程（一） CPU 与 GPU 的基本知识">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">CUDA 编程（二） GPU 编程与 CUDA</span>
+                        <span class="hidden-mobile">CUDA 编程（一） CPU 与 GPU 的基本知识</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -492,8 +463,8 @@ Windows
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/10/11/c-thread/" title="Linux 多进程、多线程、IO 模型(一)">
-                        <span class="hidden-mobile">Linux 多进程、多线程、IO 模型(一)</span>
+                      <a href="/2024/10/14/Embedded-4/" title="嵌入式系统学习（四）：文件 IO">
+                        <span class="hidden-mobile">嵌入式系统学习（四）：文件 IO</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
