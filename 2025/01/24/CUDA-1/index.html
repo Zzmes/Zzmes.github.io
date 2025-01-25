@@ -21,22 +21,25 @@
   
     <meta name="description" content="个人 CUDA 学习笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CUDA学习笔记（一）GPU 架构解析">
+<meta property="og:title" content="CUDA 编程（一） CPU 与 GPU 的基本知识">
 <meta property="og:url" content="https://zzmes.github.io/2025/01/24/CUDA-1/index.html">
 <meta property="og:site_name" content="zy space">
 <meta property="og:description" content="个人 CUDA 学习笔记">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zzmes.github.io/img/cuda/cpu.png">
+<meta property="og:image" content="https://zzmes.github.io/img/cuda/gpu.png">
 <meta property="article:published_time" content="2025-01-24T12:59:28.000Z">
-<meta property="article:modified_time" content="2025-01-24T13:00:08.487Z">
+<meta property="article:modified_time" content="2025-01-25T11:21:25.144Z">
 <meta property="article:author" content="YangYangYang">
 <meta property="article:tag" content="CUDA 编程基础">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://zzmes.github.io/img/cuda/cpu.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>CUDA学习笔记（一）GPU 架构解析 - zy space</title>
+  <title>CUDA 编程（一） CPU 与 GPU 的基本知识 - zy space</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -221,7 +224,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="CUDA学习笔记（一）GPU 架构解析"></span>
+            <span id="subtitle" data-typed-text="CUDA 编程（一） CPU 与 GPU 的基本知识"></span>
           
         </div>
 
@@ -250,7 +253,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          0 字
+          473 字
         
       </span>
     
@@ -262,7 +265,7 @@
         
         
           <!-- compatible with older versions-->
-          1 分钟
+          4 分钟
         
       </span>
     
@@ -308,13 +311,13 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">CUDA学习笔记（一）GPU 架构解析</h1>
+            <h1 id="seo-header">CUDA 编程（一） CPU 与 GPU 的基本知识</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
                     <!-- compatible with older versions-->
-                    本文最后更新于：2025年1月24日 晚上
+                    本文最后更新于：2025年1月25日 晚上
                   
                 
               </p>
@@ -322,7 +325,41 @@
             
               <div class="markdown-body">
                 
-                
+                <h1 id="重要指标">重要指标</h1>
+<ul>
+<li>延迟：一条指令从发出到返回结果所经历的时间间隔</li>
+<li>吞吐量：单位时间内执行的指令数</li>
+</ul>
+<h1 id="cpu延迟导向设计">CPU:延迟导向设计</h1>
+<p><img src="/img/cuda/cpu.png" srcset="/img/loading.gif" lazyload alt="CPU" /> - CPU 设计原则：减少延迟 -
+CPU 特点： -
+内存大：本着空间换时间的原则，拥有多级缓存结构提高访存速度（L1 Cache、L2
+Cache...），把经常访问的数据放在低级缓存 L1
+Cache中，不常访问的数据放在高级缓存 L3 Cache中 - 有很多复杂的控制单元：
+- 分支预测机制 --&gt; 在硬件中判断语言的 if else break continue 执行； -
+流水线数据前送机制 --&gt;
+判断如果马上要访问的数据，会用流水线机制把数据尽可能向前推送，减少等待时间
+- 运算单元强大： - 支持整型、浮点型数据运算 -
+支持与、或、非、逻辑运算</p>
+<h1 id="gpu吞吐量导向设计">GPU:吞吐量导向设计</h1>
+<p><img src="/img/cuda/gpu.png" srcset="/img/loading.gif" lazyload alt="GPU" /> - GPU
+设计原则：增加指令吞吐 - GPU 特点： - 缓存小（如图 L2 Cache）： - 缓存小
+--&gt; 指令访问缓存的次数显著减少 --&gt; 提升内存访问吞吐 -
+控制单元简单： - 没有分支预测机制 - 没有数据转发机制 - 精简运算单元 -
+多长延时流水线以提高吞吐量（一行很多运算单元） -
+需要大量线程来容忍延迟（每一行的运算单元控制指令只有一个）</p>
+<h1 id="gpu-与-cpu-对比">GPU 与 CPU 对比</h1>
+<ul>
+<li>CPU 比 GPU，单条复杂指令延迟快 10 倍以上</li>
+<li>GPU 比 CPU，单位时间内执行指令数量快 10 倍以上</li>
+</ul>
+<h1 id="适合使用-gpu-的场景">适合使用 GPU 的场景</h1>
+<ul>
+<li>计算密集的程序适合在 GPU:
+数值计算的比例要远大于内存操作，因此内存访问的延迟可以被计算覆盖</li>
+<li>并行度高的程序适合在 GPU:
+大任务可以拆分为执行相同指令的小任务，对复杂流程控制的需求较低</li>
+</ul>
 
                 
               </div>
@@ -341,8 +378,22 @@
     
       <span class="category-chain">
         
-  <a href="/categories/CUDA/" class="category-chain-item">CUDA</a>
+  <a href="/categories/CUDA-%E4%B8%8E-TensorRT-%E9%83%A8%E7%BD%B2/" class="category-chain-item">CUDA 与 TensorRT 部署</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/CUDA-%E4%B8%8E-TensorRT-%E9%83%A8%E7%BD%B2/CUDA/" class="category-chain-item">CUDA</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CUDA-%E4%B8%8E-TensorRT-%E9%83%A8%E7%BD%B2/CUDA/TensorRT/" class="category-chain-item">TensorRT</a>
+  
+  
+
+  
+
   
 
       </span>
@@ -368,7 +419,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>CUDA学习笔记（一）GPU 架构解析</div>
+      <div>CUDA 编程（一） CPU 与 GPU 的基本知识</div>
       <div>https://zzmes.github.io/2025/01/24/CUDA-1/</div>
     </div>
     <div class="license-meta">
