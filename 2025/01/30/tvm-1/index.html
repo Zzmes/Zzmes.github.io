@@ -19,26 +19,28 @@
   <meta name="author" content="YangYangYang">
   <meta name="keywords" content="blog">
   
-    <meta name="description" content="个人 CUDA 学习笔记">
+    <meta name="description" content="个人 TVM 学习笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CUDA 编程（二） GPU 编程与 CUDA">
-<meta property="og:url" content="https://zzmes.github.io/2025/01/25/CUDA-2/index.html">
+<meta property="og:title" content="TVM 学习笔记（一） 初识 TVM">
+<meta property="og:url" content="https://zzmes.github.io/2025/01/30/tvm-1/index.html">
 <meta property="og:site_name" content="zy space">
-<meta property="og:description" content="个人 CUDA 学习笔记">
+<meta property="og:description" content="个人 TVM 学习笔记">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zzmes.github.io/img/cuda/cudapipe.png">
-<meta property="article:published_time" content="2025-01-25T12:59:28.000Z">
-<meta property="article:modified_time" content="2025-01-25T13:29:03.306Z">
+<meta property="og:image" content="https://zzmes.github.io/img/tvm/compie.png">
+<meta property="og:image" content="https://zzmes.github.io/img/tvm/tvm-compie.png">
+<meta property="og:image" content="https://zzmes.github.io/img/tvm/tvm.png">
+<meta property="article:published_time" content="2025-01-30T10:32:04.000Z">
+<meta property="article:modified_time" content="2025-01-30T11:03:37.672Z">
 <meta property="article:author" content="YangYangYang">
-<meta property="article:tag" content="CUDA 编程基础">
+<meta property="article:tag" content="blog">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://zzmes.github.io/img/cuda/cudapipe.png">
+<meta name="twitter:image" content="https://zzmes.github.io/img/tvm/compie.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>CUDA 编程（二） GPU 编程与 CUDA - zy space</title>
+  <title>TVM 学习笔记（一） 初识 TVM - zy space</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -223,7 +225,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="CUDA 编程（二） GPU 编程与 CUDA"></span>
+            <span id="subtitle" data-typed-text="TVM 学习笔记（一） 初识 TVM"></span>
           
         </div>
 
@@ -239,8 +241,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-01-25 20:59" pubdate>
-          2025年1月25日 晚上
+        <time datetime="2025-01-30 18:32" pubdate>
+          2025年1月30日 晚上
         </time>
       </span>
     
@@ -252,7 +254,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          278 字
+          1.4k 字
         
       </span>
     
@@ -264,7 +266,7 @@
         
         
           <!-- compatible with older versions-->
-          3 分钟
+          12 分钟
         
       </span>
     
@@ -310,13 +312,13 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">CUDA 编程（二） GPU 编程与 CUDA</h1>
+            <h1 id="seo-header">TVM 学习笔记（一） 初识 TVM</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
                     <!-- compatible with older versions-->
-                    本文最后更新于：2025年1月25日 晚上
+                    本文最后更新于：2025年1月30日 晚上
                   
                 
               </p>
@@ -324,29 +326,56 @@
             
               <div class="markdown-body">
                 
-                <h1 id="cuda-编程并行计算整体流程">CUDA 编程并行计算整体流程</h1>
-<p><img src="/img/cuda/cudapipe.png" srcset="/img/loading.gif" lazyload alt="CUDAPipe" /> -
-从主机端申请内存，把内存的部分内容拷贝到设备端（GPU） - CPU
-调度在设备端的核函数计算（异步）---&gt; 核函数：设备段执行的函数 -
-从设备端拷贝到主机端，并释放内存显存</p>
-<h1 id="cuda-内存模型">CUDA 内存模型</h1>
+                <h1 id="引言---什么是机器学习编译">引言 - 什么是机器学习编译</h1>
 <ul>
-<li>CUDA 中的内存模型分为以下几个层次（硬件）：
+<li>机器学习编译 (machine learning compilation, MLC)
+是指，将机器学习算法从开发阶段，通过变换和优化算法，使其变成部署状态。
 <ul>
-<li>每个线程处理器（SP）都有自己的寄存器</li>
-<li>每个 SP 都有自己的局部内存，寄存器和局部内存只能被线程自己访问</li>
-<li>每个多核处理器（SM）内都有自己的共享内存，共享内存可以被线程块内（block）所有线程访问</li>
-<li>一个 GPU 的所有 SM 共有一块全局内存，不同线程块的线程都可以使用</li>
-</ul></li>
-<li>CUDA 中的内存模型分为以下几个层次（软件）：
-<ul>
-<li>线程处理器（SP）对应线程（thread）</li>
-<li>多核处理器（SM）对应线程块（block）</li>
-<li>设备端（device）对应网格（grid）</li>
-<li>一个 kernel 其实由一个 grid 执行</li>
-<li>一个 kernel 一次只能在一个 GPU 上执行</li>
+<li>开发形式：是指我们在开发机器学习模型时使用的形式。典型的开发形式包括用
+PyTorch、TensorFlow 或 JAX
+等通用框架编写的模型描述，以及与之相关的权重。</li>
+<li>部署形式：是指执行机器学习应用程序所需的形式。它通常涉及机器学习模型的每个步骤的支撑代码、管理资源（例如内存）的控制器，以及与应用程序开发环境的接口。</li>
 </ul></li>
 </ul>
+<h1 id="为什么需要深度学习编译器">为什么需要深度学习编译器</h1>
+<ul>
+<li><p>从训练框架角度来看，Google的TensorFlow和FaceBook的Pytorch是全球主流的深度学习框架，另外亚马逊的MxNet，百度的Paddle，旷视的MegEngine，华为的Mindspore以及一流科技的OneFlow也逐渐在被更多人接受和使用。这么多训练框架，我们究竟应该选择哪个？如果追求易用性，可能你会选择Pytorch，如果追求项目部署落地，可能你会选择TensorFlow，如果追求分布式训练最快可能你会体验OneFlow。</p></li>
+<li><p>从推理框架角度来看，无论我们选择何种训练框架训练模型，我们最终都是要将训练好的模型部署到实际场景的，在模型部署的时候我们会发现我们要部署的设备可能是五花八门的，例如Intel
+CPU/Nvidia GPU/Intel GPU/Arm CPU/Arm
+GPU/FPGA/NPU(华为海思)/BPU(地平线)/MLU(寒武纪)，如果我们要手写一个用于推理的框架在所有可能部署的设备上都达到良好的性能并且易于使用是一件非常困难的事。</p></li>
+</ul>
+<p>一般要部署模型到一个指定设备上，我们一般会使用硬件厂商自己推出的一些前向推理框架，例如在Intel的CPU/GPU上就使用OpenVINO，在Arm的CPU/GPU上使用NCNN/MNN等，在Nvidia
+GPU上使用TensorRT。虽然针对不同的硬件设备我们使用特定的推理框架进行部署是最优的，但这也同时存在问题，比如一个开发者训练了一个模型需要在多个不同类型的设备上进行部署，那么开发者需要将训练的模型分别转换到特定框架可以读取的格式，并且还要考虑各个推理框架算子实现是否完全对齐的问题，然后在不同平台部署时还容易出现的问题是开发者训练的模型在一个硬件上可以高效推理，部署到另外一个硬件上性能骤降。并且从探索ONNX模型转换来看，不同框架间模型转换工作也是阻碍各种训练框架模型快速落地的一大原因。</p>
+<h1 id="深度学习编译器与传统编译器">深度学习编译器与传统编译器</h1>
+<p>现代传统编译器（LLVM为例）包含编译器前端，编译器中端，编译器后端等概念，并引入IR
+(Intermediate Representation)的概念。解释如下： -
+编译器前端：接收C/C++/Java等不同语言，进行代码生成，吐出IR -
+编译器中端：接收IR，进行不同编译器后端可以共享的优化，如常量替换，死代码消除，循环优化等，吐出优化后的IR
+-
+编译器后端：接收优化后的IR，进行不同硬件的平台相关优化与硬件指令生成，吐出目标文件</p>
+<figure>
+<img src="/img/tvm/compie.png" srcset="/img/loading.gif" lazyload alt="传统编译器编译流程" />
+<figcaption aria-hidden="true">传统编译器编译流程</figcaption>
+</figure>
+<p>受到传统编译器的启发，深度学习编译器被提出，我们可以将各个训练框架训练出来的模型看作各种编程语言，然后将这些模型传入深度学习编译器之后吐出IR，由于深度学习的IR其实就是计算图，所以可以直接叫作Graph
+IR。针对这些Graph
+IR可以做一些计算图优化再吐出IR分发给各种硬件使用。这样，深度学习编译器的过程就和传统的编译器类似，可以解决上面提到的很多繁琐的问题。
+<img src="/img/tvm/tvm-compie.png" srcset="/img/loading.gif" lazyload
+alt="深度学习编译器(TVM)编译流程" /></p>
+<h1 id="tvm">TVM</h1>
+<p>TVM 是一个用于 CPU、GPU
+和机器学习加速器的开源机器学习编译器框架，旨在让机器学习工程师能够在任何硬件后端上高效地优化和运行计算。
+<img src="/img/tvm/tvm.png" srcset="/img/loading.gif" lazyload alt="TMV" /></p>
+<p>从这个图中我们可以看到，TVM架构的核心部分就是Relay编译器。Relay编译器支持直接接收深度学习框架的模型，如TensorFlow/Pytorch/Caffe/MxNet等，同时也支持一些模型的中间格式如ONNX、CoreML。这些模型被Relay直接编译成Graph
+IR，然后这些Graph IR被再次优化，吐出优化后的Graph
+IR，最后对于不同的后端这些Graph
+IR都会被编译为特定后端可以识别的机器码完成模型推理。比如对于CPU，NNVM就吐出LLVM可以识别的IR，再通过LLVM编译器编译为机器码到CPU上执行。</p>
+<h1 id="tvm-环境配置">TVM 环境配置</h1>
+<p>环境要求：GCC 7.1，CMake 3.18 或更高版本，推荐使用 LLVM 构建 TVM
+库以启用所有功能，如需使用 CUDA，请确保 CUDA 工具包的版本至少在 8.0
+以上，Python推荐使用3.8.X+版本。 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> --recursive https://github.com/apache/tvm tvm<br><span class="hljs-built_in">cd</span> tvm<br><span class="hljs-built_in">mkdir</span> build<br><span class="hljs-built_in">cp</span> cmake/config.cmake build<br><span class="hljs-built_in">cd</span> build<br>cmake ..<br>make -j4<br><span class="hljs-built_in">export</span> TVM_HOME=/path/to/tvm<br><span class="hljs-built_in">export</span> PYTHONPATH=<span class="hljs-variable">$TVM_HOME</span>/python:<span class="hljs-variable">$&#123;PYTHONPATH&#125;</span><br></code></pre></td></tr></table></figure>
+在此之前需要安装llvm，直接在官网上下载已经编译好的文件。需要开启 CUDA
+等功能见官方文档修改相应的config.cmake。</p>
 
                 
               </div>
@@ -365,20 +394,13 @@
     
       <span class="category-chain">
         
-  <a href="/categories/CUDA-%E4%B8%8E-TensorRT-%E9%83%A8%E7%BD%B2/" class="category-chain-item">CUDA 与 TensorRT 部署</a>
+  <a href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2/" class="category-chain-item">模型部署</a>
   
   
     <span>></span>
     
-  <a href="/categories/CUDA-%E4%B8%8E-TensorRT-%E9%83%A8%E7%BD%B2/CUDA/" class="category-chain-item">CUDA</a>
+  <a href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2/TVM/" class="category-chain-item">TVM</a>
   
-  
-    <span>></span>
-    
-  <a href="/categories/CUDA-%E4%B8%8E-TensorRT-%E9%83%A8%E7%BD%B2/CUDA/TensorRT/" class="category-chain-item">TensorRT</a>
-  
-  
-
   
 
   
@@ -391,13 +413,6 @@
     </div>
   
   
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/CUDA-%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/" class="print-no-link">#CUDA 编程基础</a>
-      
-    </div>
-  
 </div>
 
 
@@ -406,8 +421,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>CUDA 编程（二） GPU 编程与 CUDA</div>
-      <div>https://zzmes.github.io/2025/01/25/CUDA-2/</div>
+      <div>TVM 学习笔记（一） 初识 TVM</div>
+      <div>https://zzmes.github.io/2025/01/30/tvm-1/</div>
     </div>
     <div class="license-meta">
       
@@ -419,7 +434,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年1月25日</div>
+          <div>2025年1月30日</div>
         </div>
       
       
@@ -451,18 +466,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/01/30/tvm-1/" title="TVM 学习笔记（一） 初识 TVM">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">TVM 学习笔记（一） 初识 TVM</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/01/24/CUDA-1/" title="CUDA 编程（一） CPU 与 GPU 的基本知识">
-                        <span class="hidden-mobile">CUDA 编程（一） CPU 与 GPU 的基本知识</span>
+                      <a href="/2025/01/25/CUDA-2/" title="CUDA 编程（二） GPU 编程与 CUDA">
+                        <span class="hidden-mobile">CUDA 编程（二） GPU 编程与 CUDA</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
