@@ -324,30 +324,28 @@
             
               <div class="markdown-body">
                 
-                <h1 id="CUDA-编程并行计算整体流程"><a href="#CUDA-编程并行计算整体流程" class="headerlink" title="CUDA 编程并行计算整体流程"></a>CUDA 编程并行计算整体流程</h1><p><img src="/img/cuda/cudapipe.png" srcset="/img/loading.gif" lazyload alt="CUDAPipe"></p>
+                <h1 id="cuda-编程并行计算整体流程">CUDA 编程并行计算整体流程</h1>
+<p><img src="/img/cuda/cudapipe.png" srcset="/img/loading.gif" lazyload alt="CUDAPipe" /> -
+从主机端申请内存，把内存的部分内容拷贝到设备端（GPU） - CPU
+调度在设备端的核函数计算（异步）---&gt; 核函数：设备段执行的函数 -
+从设备端拷贝到主机端，并释放内存显存</p>
+<h1 id="cuda-内存模型">CUDA 内存模型</h1>
 <ul>
-<li>从主机端申请内存，把内存的部分内容拷贝到设备端（GPU）</li>
-<li>CPU 调度在设备端的核函数计算（异步）—&gt; 核函数：设备段执行的函数</li>
-<li>从设备端拷贝到主机端，并释放内存显存</li>
-</ul>
-<h1 id="CUDA-内存模型"><a href="#CUDA-内存模型" class="headerlink" title="CUDA 内存模型"></a>CUDA 内存模型</h1><ul>
-<li><p>CUDA 中的内存模型分为以下几个层次（硬件）：</p>
+<li>CUDA 中的内存模型分为以下几个层次（硬件）：
 <ul>
 <li>每个线程处理器（SP）都有自己的寄存器</li>
 <li>每个 SP 都有自己的局部内存，寄存器和局部内存只能被线程自己访问</li>
 <li>每个多核处理器（SM）内都有自己的共享内存，共享内存可以被线程块内（block）所有线程访问</li>
 <li>一个 GPU 的所有 SM 共有一块全局内存，不同线程块的线程都可以使用</li>
-</ul>
-</li>
-<li><p>CUDA 中的内存模型分为以下几个层次（软件）：</p>
+</ul></li>
+<li>CUDA 中的内存模型分为以下几个层次（软件）：
 <ul>
 <li>线程处理器（SP）对应线程（thread）</li>
 <li>多核处理器（SM）对应线程块（block）</li>
 <li>设备端（device）对应网格（grid）</li>
 <li>一个 kernel 其实由一个 grid 执行</li>
 <li>一个 kernel 一次只能在一个 GPU 上执行</li>
-</ul>
-</li>
+</ul></li>
 </ul>
 
                 
