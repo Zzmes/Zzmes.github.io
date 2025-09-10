@@ -19,18 +19,19 @@
   <meta name="author" content="YangYangYang">
   <meta name="keywords" content="blog">
   
-    <meta name="description" content="👏👏👏欢迎访问羊羊羊的个人博客！！！">
+    <meta name="description" content="安装 clash 下载链接：https:&#x2F;&#x2F;github.com&#x2F;doreamon-design&#x2F;clash - 启动 123cd &#x2F;clashwget -O config.yaml https:&#x2F;&#x2F;your subscribe url.&#x2F;clash -d .&#x2F; - 设置系统代理 12345sudo vim ~&#x2F;.zshrc&#x2F;&#x2F; 加入并保存export https_proxy&#x3D;http:&#x2F;&#x2F;127">
 <meta property="og:type" content="article">
-<meta property="og:title" content="个人博客说明">
-<meta property="og:url" content="https://zzmes.github.io/2025/09/10/announcement/index.html">
+<meta property="og:title" content="Ubuntu Server 配置 Clash">
+<meta property="og:url" content="https://zzmes.github.io/2025/09/10/ubuntu-clash-md/index.html">
 <meta property="og:site_name" content="Zzmes space">
-<meta property="og:description" content="👏👏👏欢迎访问羊羊羊的个人博客！！！">
+<meta property="og:description" content="安装 clash 下载链接：https:&#x2F;&#x2F;github.com&#x2F;doreamon-design&#x2F;clash - 启动 123cd &#x2F;clashwget -O config.yaml https:&#x2F;&#x2F;your subscribe url.&#x2F;clash -d .&#x2F; - 设置系统代理 12345sudo vim ~&#x2F;.zshrc&#x2F;&#x2F; 加入并保存export https_proxy&#x3D;http:&#x2F;&#x2F;127">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zzmes.github.io/img/post_index/anno.jpg">
-<meta property="article:published_time" content="2025-09-10T13:00:45.030Z">
-<meta property="article:modified_time" content="2025-09-10T13:00:46.656Z">
+<meta property="article:published_time" content="2025-09-10T14:32:39.000Z">
+<meta property="article:modified_time" content="2025-09-10T14:35:33.535Z">
 <meta property="article:author" content="YangYangYang">
-<meta property="article:tag" content="blog">
+<meta property="article:tag" content="clash">
+<meta property="article:tag" content="ubuntu">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://zzmes.github.io/img/post_index/anno.jpg">
   
@@ -38,7 +39,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>个人博客说明 - Zzmes space</title>
+  <title>Ubuntu Server 配置 Clash - Zzmes space</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -223,7 +224,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="个人博客说明"></span>
+            <span id="subtitle" data-typed-text="Ubuntu Server 配置 Clash"></span>
           
         </div>
 
@@ -239,7 +240,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-09-10 21:00" pubdate>
+        <time datetime="2025-09-10 22:32" pubdate>
           2025年9月10日 晚上
         </time>
       </span>
@@ -252,7 +253,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          31 字
+          218 字
         
       </span>
     
@@ -264,7 +265,7 @@
         
         
           <!-- compatible with older versions-->
-          1 分钟
+          2 分钟
         
       </span>
     
@@ -310,7 +311,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">个人博客说明</h1>
+            <h1 id="seo-header">Ubuntu Server 配置 Clash</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
@@ -324,7 +325,16 @@
             
               <div class="markdown-body">
                 
-                <p>欢迎来到我的个人小站！我会在这里分享日常生活、技术心得以及个人兴趣。</p>
+                <h2 id="安装-clash">安装 clash</h2>
+<p>下载链接：https://github.com/doreamon-design/clash - 启动
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /clash<br>wget -O config.yaml https://your subscribe url<br>./clash -d ./<br></code></pre></td></tr></table></figure> - 设置系统代理 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> vim ~/.zshrc<br>// 加入并保存<br><span class="hljs-built_in">export</span> https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 no_proxy=<span class="hljs-string">&quot;localhost,127.0.0.1&quot;</span><br>//更新<br><span class="hljs-built_in">source</span> ～/.zshrc<br></code></pre></td></tr></table></figure></p>
+<ul>
+<li>启用和禁用命令 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#禁用全局代理</span><br><span class="hljs-built_in">unset</span> http_proxy<br><span class="hljs-built_in">unset</span> https_proxy<br><span class="hljs-comment">#启用全局代理</span><br><span class="hljs-built_in">set</span> http_proxy<br><span class="hljs-built_in">set</span> https_proxy<br></code></pre></td></tr></table></figure> ## 设置clash开机启动</li>
+<li>创建服务文件： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> vim /etc/systemd/system/clash.service<br></code></pre></td></tr></table></figure></li>
+<li>填入以下内容（修改路径为你的 Clash 可执行文件和配置文件路径）：
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs text">[Unit]<br>Description=Clash Service<br>After=network.target<br><br>[Service]<br>Type=simple<br>ExecStart=/home/zzmes/workspace/tools/clash/clash -d /home/zzmes/workspace/tools/clash<br>Restart=on-failure<br>User=zzmes<br>WorkingDirectory=/home/zzmes/workspace/tools/clash<br><br>[Install]<br>WantedBy=multi-user.target<br></code></pre></td></tr></table></figure></li>
+<li>保存后执行： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl daemon-reload<br><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">enable</span> clash      <span class="hljs-comment"># 开机启动</span><br><span class="hljs-built_in">sudo</span> systemctl start clash       <span class="hljs-comment"># 立即启动</span><br><span class="hljs-built_in">sudo</span> systemctl status clash      <span class="hljs-comment"># 查看状态</span><br></code></pre></td></tr></table></figure> ## Clash相关的管理命令 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#启动Clash</span><br><span class="hljs-built_in">sudo</span> systemctl start clash.service<br><span class="hljs-comment">#重启Clash</span><br><span class="hljs-built_in">sudo</span> systemctl restart clash.service<br><span class="hljs-comment">#查看Clash运行状态</span><br><span class="hljs-built_in">sudo</span> systemctl status clash.service<br><span class="hljs-comment">#禁用全局代理</span><br><span class="hljs-built_in">unset</span> http_proxy<br><span class="hljs-built_in">unset</span> https_proxy<br><span class="hljs-comment">#启用全局代理</span><br><span class="hljs-built_in">set</span> http_proxy<br><span class="hljs-built_in">set</span> https_proxy<br></code></pre></td></tr></table></figure></li>
+</ul>
 
                 
               </div>
@@ -333,6 +343,36 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BB%A3%E7%90%86/" class="category-chain-item">代理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/clash/" class="print-no-link">#clash</a>
+      
+        <a href="/tags/ubuntu/" class="print-no-link">#ubuntu</a>
+      
+    </div>
   
 </div>
 
@@ -342,8 +382,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>个人博客说明</div>
-      <div>https://zzmes.github.io/2025/09/10/announcement/</div>
+      <div>Ubuntu Server 配置 Clash</div>
+      <div>https://zzmes.github.io/2025/09/10/ubuntu-clash-md/</div>
     </div>
     <div class="license-meta">
       
@@ -387,15 +427,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/09/10/ubuntu-clash-md/" title="Ubuntu Server 配置 Clash">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Ubuntu Server 配置 Clash</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2025/09/10/announcement/" title="个人博客说明">
+                        <span class="hidden-mobile">个人博客说明</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
