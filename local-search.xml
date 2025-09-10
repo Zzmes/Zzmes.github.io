@@ -4,6 +4,40 @@
   
   
   <entry>
+    <title>个人博客说明</title>
+    <link href="/2025/09/10/announcement/"/>
+    <url>/2025/09/10/announcement/</url>
+    
+    <content type="html"><![CDATA[<p>欢迎来到我的个人小站！我会在这里分享日常生活、技术心得以及个人兴趣。</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>TVM 学习笔记（二） 初识 TVM</title>
+    <link href="/2025/01/30/tvm-2/"/>
+    <url>/2025/01/30/tvm-2/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    <categories>
+      
+      <category>模型部署</category>
+      
+      <category>TVM</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>TVM 学习笔记（一） 初识 TVM</title>
     <link href="/2025/01/30/tvm-1/"/>
     <url>/2025/01/30/tvm-1/</url>
@@ -489,19 +523,6 @@
       <tag>Docker</tag>
       
     </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>个人博客说明</title>
-    <link href="/2024/08/29/announcement/"/>
-    <url>/2024/08/29/announcement/</url>
-    
-    <content type="html"><![CDATA[<p>欢迎来到我的个人小站！我会在这里分享日常生活、技术心得以及个人兴趣。</p>]]></content>
-    
-    
     
   </entry>
   
