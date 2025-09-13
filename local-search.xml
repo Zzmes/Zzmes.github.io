@@ -4,6 +4,46 @@
   
   
   <entry>
+    <title>Jetson orin Nano 增加交换空间</title>
+    <link href="/2025/09/13/jetson-swap/"/>
+    <url>/2025/09/13/jetson-swap/</url>
+    
+    <content type="html"><![CDATA[<h2 id="执行命令">执行命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">disable</span> nvzramconfig<br><span class="hljs-built_in">sudo</span> fallocate -l 16G /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> mkswap /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> swapon /mnt/16GB.swap<br></code></pre></td></tr></table></figure><p>然后在<code>/etc/fstab</code>的末尾添加以下行，以使更改永久生效：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/mnt/16GB.swap  none  swap  sw 0  0<br></code></pre></td></tr></table></figure><h2 id="如何取消">如何取消</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> swapoff /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">rm</span> /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">enable</span> nvzramconfig<br><span class="hljs-built_in">sudo</span> systemctl start nvzramconfig<br></code></pre></td></tr></table></figure><p>删除<code>/etc/fstab</code>中的挂载记录 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/mnt/16GB.swap  none  swap  sw 0  0<br></code></pre></td></tr></table></figure></p><h2 id="其他禁用桌面图形用户界面">其他（禁用桌面图形用户界面）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> init 3     <span class="hljs-comment"># 停止桌面</span><br>// 使用Ctrl+Alt+F1、F2等组合键让用户重新登录到控制台<br><span class="hljs-built_in">sudo</span> init 5     <span class="hljs-comment"># 重新启动桌面</span><br></code></pre></td></tr></table></figure><p>如果希望在重启后该设置仍然生效，可以使用以下命令来更改启动行为：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl set-default multi-user.target     <span class="hljs-comment"># 启动时禁用桌面</span><br><span class="hljs-built_in">sudo</span> systemctl set-default graphical.target      <span class="hljs-comment"># 启动时启用桌面</span><br></code></pre></td></tr></table></figure></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>ubuntu</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ubuntu</tag>
+      
+      <tag>swap</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>个人博客说明</title>
+    <link href="/2025/09/13/announcement/"/>
+    <url>/2025/09/13/announcement/</url>
+    
+    <content type="html"><![CDATA[<p>欢迎来到我的个人小站！我会在这里分享日常生活、技术心得以及个人兴趣。</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Ubuntu Server 配置 Clash</title>
     <link href="/2025/09/10/ubuntu-clash-md/"/>
     <url>/2025/09/10/ubuntu-clash-md/</url>
@@ -20,24 +60,11 @@
     
     <tags>
       
-      <tag>clash</tag>
-      
       <tag>ubuntu</tag>
       
+      <tag>clash</tag>
+      
     </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>个人博客说明</title>
-    <link href="/2025/09/10/announcement/"/>
-    <url>/2025/09/10/announcement/</url>
-    
-    <content type="html"><![CDATA[<p>欢迎来到我的个人小站！我会在这里分享日常生活、技术心得以及个人兴趣。</p>]]></content>
-    
-    
     
   </entry>
   

@@ -19,26 +19,27 @@
   <meta name="author" content="Zzmes">
   <meta name="keywords" content="blog">
   
-    <meta name="description" content="👏👏👏欢迎访问羊羊羊的个人博客！！！">
+    <meta name="description" content="ubuntu 增加交换空间">
 <meta property="og:type" content="article">
-<meta property="og:title" content="个人博客说明">
-<meta property="og:url" content="https://zzmes.github.io/2025/09/10/announcement/index.html">
+<meta property="og:title" content="Jetson orin Nano 增加交换空间">
+<meta property="og:url" content="https://zzmes.github.io/2025/09/13/jetson-swap/index.html">
 <meta property="og:site_name" content="Zzmes space">
-<meta property="og:description" content="👏👏👏欢迎访问羊羊羊的个人博客！！！">
+<meta property="og:description" content="ubuntu 增加交换空间">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zzmes.github.io/img/post_index/anno.jpg">
-<meta property="article:published_time" content="2025-09-10T13:00:45.030Z">
-<meta property="article:modified_time" content="2025-09-10T13:00:46.656Z">
+<meta property="og:image" content="https://zzmes.github.io/img/post_index/clash.jpg">
+<meta property="article:published_time" content="2025-09-13T15:25:12.000Z">
+<meta property="article:modified_time" content="2025-09-13T15:28:56.054Z">
 <meta property="article:author" content="Zzmes">
-<meta property="article:tag" content="blog">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="swap">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://zzmes.github.io/img/post_index/anno.jpg">
+<meta name="twitter:image" content="https://zzmes.github.io/img/post_index/clash.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>个人博客说明 - Zzmes space</title>
+  <title>Jetson orin Nano 增加交换空间 - Zzmes space</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -223,7 +224,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="个人博客说明"></span>
+            <span id="subtitle" data-typed-text="Jetson orin Nano 增加交换空间"></span>
           
         </div>
 
@@ -239,8 +240,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-09-10 21:00" pubdate>
-          2025年9月10日 晚上
+        <time datetime="2025-09-13 23:25" pubdate>
+          2025年9月13日 晚上
         </time>
       </span>
     
@@ -252,7 +253,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          31 字
+          158 字
         
       </span>
     
@@ -264,7 +265,7 @@
         
         
           <!-- compatible with older versions-->
-          1 分钟
+          2 分钟
         
       </span>
     
@@ -310,13 +311,13 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">个人博客说明</h1>
+            <h1 id="seo-header">Jetson orin Nano 增加交换空间</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
                     <!-- compatible with older versions-->
-                    本文最后更新于：2025年9月10日 晚上
+                    本文最后更新于：2025年9月13日 晚上
                   
                 
               </p>
@@ -324,7 +325,17 @@
             
               <div class="markdown-body">
                 
-                <p>欢迎来到我的个人小站！我会在这里分享日常生活、技术心得以及个人兴趣。</p>
+                <h2 id="执行命令">执行命令</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">disable</span> nvzramconfig<br><span class="hljs-built_in">sudo</span> fallocate -l 16G /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> mkswap /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> swapon /mnt/16GB.swap<br></code></pre></td></tr></table></figure>
+<p>然后在<code>/etc/fstab</code>的末尾添加以下行，以使更改永久生效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/mnt/16GB.swap  none  swap  sw 0  0<br></code></pre></td></tr></table></figure>
+<h2 id="如何取消">如何取消</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> swapoff /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">rm</span> /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">enable</span> nvzramconfig<br><span class="hljs-built_in">sudo</span> systemctl start nvzramconfig<br></code></pre></td></tr></table></figure>
+<p>删除<code>/etc/fstab</code>中的挂载记录 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/mnt/16GB.swap  none  swap  sw 0  0<br></code></pre></td></tr></table></figure></p>
+<h2 id="其他禁用桌面图形用户界面">其他（禁用桌面图形用户界面）</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> init 3     <span class="hljs-comment"># 停止桌面</span><br>// 使用Ctrl+Alt+F1、F2等组合键让用户重新登录到控制台<br><span class="hljs-built_in">sudo</span> init 5     <span class="hljs-comment"># 重新启动桌面</span><br></code></pre></td></tr></table></figure>
+<p>如果希望在重启后该设置仍然生效，可以使用以下命令来更改启动行为：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl set-default multi-user.target     <span class="hljs-comment"># 启动时禁用桌面</span><br><span class="hljs-built_in">sudo</span> systemctl set-default graphical.target      <span class="hljs-comment"># 启动时启用桌面</span><br></code></pre></td></tr></table></figure></p>
 
                 
               </div>
@@ -333,6 +344,36 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ubuntu/" class="category-chain-item">ubuntu</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ubuntu/" class="print-no-link">#ubuntu</a>
+      
+        <a href="/tags/swap/" class="print-no-link">#swap</a>
+      
+    </div>
   
 </div>
 
@@ -342,8 +383,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>个人博客说明</div>
-      <div>https://zzmes.github.io/2025/09/10/announcement/</div>
+      <div>Jetson orin Nano 增加交换空间</div>
+      <div>https://zzmes.github.io/2025/09/13/jetson-swap/</div>
     </div>
     <div class="license-meta">
       
@@ -355,7 +396,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年9月10日</div>
+          <div>2025年9月13日</div>
         </div>
       
       
@@ -387,15 +428,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/09/10/ubuntu-clash-md/" title="Ubuntu Server 配置 Clash">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Ubuntu Server 配置 Clash</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2025/09/13/announcement/" title="个人博客说明">
+                        <span class="hidden-mobile">个人博客说明</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
