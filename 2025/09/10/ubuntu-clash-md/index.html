@@ -19,16 +19,16 @@
   <meta name="author" content="Zzmes">
   <meta name="keywords" content="blog">
   
-    <meta name="description" content="ubuntu 配置代理">
+    <meta name="description" content="从手动运行 Clash 到交给 systemd 管理，整理 Ubuntu Server 的终端代理配置、开机自启与日常排查方法。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ubuntu Server 配置 Clash">
+<meta property="og:title" content="在 Ubuntu Server 上配置 Clash：让终端代理随开机启动">
 <meta property="og:url" content="https://zzmes.github.io/2025/09/10/ubuntu-clash-md/index.html">
 <meta property="og:site_name" content="Zzmes space">
-<meta property="og:description" content="ubuntu 配置代理">
+<meta property="og:description" content="从手动运行 Clash 到交给 systemd 管理，整理 Ubuntu Server 的终端代理配置、开机自启与日常排查方法。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zzmes.github.io/img/post_index/clash.jpg">
 <meta property="article:published_time" content="2025-09-10T14:32:39.000Z">
-<meta property="article:modified_time" content="2026-03-26T14:56:14.390Z">
+<meta property="article:modified_time" content="2026-10-31T09:54:20.293Z">
 <meta property="article:author" content="Zzmes">
 <meta property="article:tag" content="clash">
 <meta property="article:tag" content="ubuntu">
@@ -39,7 +39,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Ubuntu Server 配置 Clash - Zzmes space</title>
+  <title>在 Ubuntu Server 上配置 Clash：让终端代理随开机启动 - Zzmes space</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -341,7 +341,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Ubuntu Server 配置 Clash"></span>
+            <span id="subtitle" data-typed-text="在 Ubuntu Server 上配置 Clash：让终端代理随开机启动"></span>
           
         </div>
 
@@ -370,7 +370,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          1k 字
+          2.7k 字
         
       </span>
     
@@ -382,7 +382,7 @@
         
         
           <!-- compatible with older versions-->
-          9 分钟
+          23 分钟
         
       </span>
     
@@ -430,13 +430,13 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Ubuntu Server 配置 Clash</h1>
+            <h1 id="seo-header">在 Ubuntu Server 上配置 Clash：让终端代理随开机启动</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
                     <!-- compatible with older versions-->
-                    本文最后更新于：2026年3月26日 晚上
+                    本文最后更新于：2026年10月31日 下午
                   
                 
               </p>
@@ -444,22 +444,91 @@
             
               <div class="markdown-body">
                 
-                <h2 id="安装-clash">安装 clash</h2>
-<p><a target="_blank" rel="noopener" href="https://github.com/doreamon-design/clash">下载链接</a></p>
+                <p>给 Ubuntu Server 配置代理时，启动 Clash
+只是第一步。要让终端里的工具使用它，还需要设置代理地址；想在重启后继续使用，则要把
+Clash 交给 systemd 管理。</p>
+<p>这篇把这几步串起来：先手动跑通，再配置终端开关，最后设置开机自启。后面需要换配置或排查连接问题时，也能顺着同一条线检查。</p>
+<h2 id="先把目录和配置准备好">先把目录和配置准备好</h2>
+<p>准备一个与系统架构匹配的 Linux 版 Clash 可执行文件，以及可以使用的
+<code>config.yaml</code>。本文沿用 <code>clash</code>
+作为程序名，统一放在下面的目录中：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">~/workspace/tools/clash/<br>├── clash<br>└── config.yaml<br></code></pre></td></tr></table></figure>
+<p>可以先创建目录，并查看机器架构：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p ~/workspace/tools/clash<br><span class="hljs-built_in">uname</span> -m<br></code></pre></td></tr></table></figure>
+<p><code>x86_64</code> 和 <code>aarch64</code>
+对应不同的程序构建，下载时要选对。将程序与配置放好后，添加执行权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/workspace/tools/clash<br><span class="hljs-built_in">chmod</span> u+x clash<br></code></pre></td></tr></table></figure>
+<p>下面假设配置中的 HTTP 或混合代理端口是
+<strong>7890</strong>。如果你设置了其他端口，后面的代理地址也要一起替换。</p>
+<h2 id="先在前台跑通">先在前台跑通</h2>
+<p>进入目录后启动 Clash：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./clash -d .<br></code></pre></td></tr></table></figure>
+<p><code>-d .</code>
+表示使用当前目录作为工作目录。先保持这个终端开着，观察是否有配置解析、端口占用或节点连接方面的报错。</p>
+<p>然后另开一个终端，显式指定代理，测试一次请求：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl --noproxy <span class="hljs-string">&#x27;&#x27;</span> --proxy http://127.0.0.1:7890 -I https://www.example.com<br></code></pre></td></tr></table></figure>
+<p>这里的 <code>--noproxy ''</code>
+是为了避免已有的直连规则影响测试。能收到目标站点的 HTTP
+响应，说明这次请求已经通过指定的代理端口完成；若失败，先看 Clash
+的输出，再检查端口和配置。</p>
+<p>这一步跑通后，再继续设置终端环境变量，会更容易判断问题出在哪一层。</p>
+<h2 id="给终端加一个代理开关">给终端加一个代理开关</h2>
+<p>我更愿意把代理做成两个小函数：需要时开启，用完就关闭，也方便临时排查直连与代理的区别。</p>
+<p>如果使用 Zsh，把下面的内容放进 <code>~/.zshrc</code>；如果使用
+Bash，则放进 <code>~/.bashrc</code>。编辑自己的配置文件即可，不需要使用
+<code>sudo</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-function"><span class="hljs-title">proxy_on</span></span>() &#123;<br>    <span class="hljs-built_in">export</span> http_proxy=<span class="hljs-string">&#x27;http://127.0.0.1:7890&#x27;</span><br>    <span class="hljs-built_in">export</span> https_proxy=<span class="hljs-string">&quot;<span class="hljs-variable">$http_proxy</span>&quot;</span><br>    <span class="hljs-built_in">export</span> no_proxy=<span class="hljs-string">&#x27;localhost,127.0.0.1,::1&#x27;</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">proxy_off</span></span>() &#123;<br>    <span class="hljs-built_in">unset</span> http_proxy https_proxy HTTP_PROXY HTTPS_PROXY<br>    <span class="hljs-built_in">unset</span> all_proxy ALL_PROXY no_proxy NO_PROXY<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>保存后重新加载对应文件。以 Zsh 为例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">source</span> ~/.zshrc<br></code></pre></td></tr></table></figure>
+<p>之后在当前终端执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">proxy_on<br>curl -I https://www.example.com<br></code></pre></td></tr></table></figure>
+<p>关闭则执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">proxy_off<br></code></pre></td></tr></table></figure>
+<p>虽然变量名是 <code>https_proxy</code>，这里仍然写
+<code>http://127.0.0.1:7890</code>：这个前缀描述的是应用连接本地代理的方式，目标网站仍然可以使用
+HTTPS。</p>
+<p>环境变量会影响当前 shell
+及之后启动、且支持这些变量的程序。<code>sudo</code>、定时任务和 systemd
+服务有各自的运行环境，不能假定它们会自动沿用当前终端的设置。上面的关闭函数也会清除常见的大小写代理变量，使用前留意自己是否另有设置。</p>
+<h2 id="交给-systemd重启后自动运行">交给 systemd，重启后自动运行</h2>
+<p>前台测试通过后，回到运行 Clash 的终端，按 <code>Ctrl+C</code>
+停止它，避免稍后的服务重复占用同一个端口。</p>
+<p>创建服务文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudoedit /etc/systemd/system/clash.service<br></code></pre></td></tr></table></figure>
+<p>填入以下内容：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Unit]</span><br><span class="hljs-attr">Description</span>=Clash proxy service<br><span class="hljs-attr">Wants</span>=network-<span class="hljs-literal">on</span>line.target<br><span class="hljs-attr">After</span>=network-<span class="hljs-literal">on</span>line.target<br><br><span class="hljs-section">[Service]</span><br><span class="hljs-attr">Type</span>=simple<br><span class="hljs-attr">User</span>=zzmes<br><span class="hljs-attr">WorkingDirectory</span>=/home/zzmes/workspace/tools/clash<br><span class="hljs-attr">ExecStart</span>=/home/zzmes/workspace/tools/clash/clash -d /home/zzmes/workspace/tools/clash<br><span class="hljs-attr">Restart</span>=<span class="hljs-literal">on</span>-failure<br><span class="hljs-attr">RestartSec</span>=<span class="hljs-number">5</span><br><br><span class="hljs-section">[Install]</span><br><span class="hljs-attr">WantedBy</span>=multi-user.target<br></code></pre></td></tr></table></figure>
+<p>这里的 <code>zzmes</code> 和
+<code>/home/zzmes/workspace/tools/clash</code>
+是示例中的用户名与绝对路径，请按实际环境替换。服务文件中的路径不要写成
+<code>~</code>；程序、配置文件和目录也需要对运行用户可读。</p>
+<p>保存后加载服务，并立即启动、开启自启：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl daemon-reload<br><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">enable</span> --now clash.service<br>systemctl status clash.service --no-pager<br></code></pre></td></tr></table></figure>
+<p><code>Restart=on-failure</code>
+会在进程异常退出后尝试重新启动。查看状态时，除了确认服务处于运行状态，也可以再执行一次前面的
+<code>curl</code> 测试，确认代理请求确实可用。</p>
+<p>注意，开机自启负责启动 Clash 进程。进入新终端后，仍需执行
+<code>proxy_on</code>，让支持代理环境变量的工具使用它。</p>
+<h2 id="后续维护时常用的几条命令">后续维护时常用的几条命令</h2>
+<p>修改 <code>config.yaml</code> 后，重启服务加载配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl restart clash.service<br></code></pre></td></tr></table></figure>
+<p>想看最近的日志，或持续跟踪输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">journalctl -u clash.service -n 50 --no-pager<br>journalctl -u clash.service -f<br></code></pre></td></tr></table></figure>
+<p>临时停止服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl stop clash.service<br></code></pre></td></tr></table></figure>
+<p>如果以后不再需要开机运行，可以关闭自启并停止进程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">disable</span> --now clash.service<br></code></pre></td></tr></table></figure>
+<p>停掉服务后，记得在使用过代理的终端里执行
+<code>proxy_off</code>。否则工具仍可能向已经关闭的本地端口发请求，表现为连接被拒绝。</p>
+<p>遇到问题时，我会依次检查三个地方：<strong>服务有没有运行、代理端口能不能访问、当前应用有没有使用正确的代理地址</strong>。把这三件事分开确认，通常比反复改配置更容易定位原因。</p>
+<h2 id="参考资料">参考资料</h2>
 <ul>
-<li><p>启动 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /clash<br>wget -O config.yaml https://your subscribe url<br>./clash -d ./<br></code></pre></td></tr></table></figure></p></li>
-<li><p>设置系统代理 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> vim ~/.zshrc<br>// 加入并保存<br><span class="hljs-built_in">export</span> https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 no_proxy=<span class="hljs-string">&quot;localhost,127.0.0.1&quot;</span><br>//更新<br><span class="hljs-built_in">source</span> ～/.zshrc<br></code></pre></td></tr></table></figure></p></li>
-<li><p>启用和禁用命令 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#禁用全局代理</span><br><span class="hljs-built_in">unset</span> http_proxy<br><span class="hljs-built_in">unset</span> https_proxy<br><span class="hljs-comment">#启用全局代理</span><br><span class="hljs-built_in">set</span> http_proxy<br><span class="hljs-built_in">set</span> https_proxy<br></code></pre></td></tr></table></figure></p></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/doreamon-design/clash">原记录参考的
+Clash 项目</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://curl.se/docs/manpage.html">curl：代理参数与环境变量</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html">systemd：服务配置说明</a></li>
 </ul>
-<h2 id="设置clash开机启动">设置clash开机启动</h2>
-<ul>
-<li><p>创建服务文件： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> vim /etc/systemd/system/clash.service<br></code></pre></td></tr></table></figure></p></li>
-<li><p>填入以下内容（修改路径为你的 Clash 可执行文件和配置文件路径）：
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs text">[Unit]<br>Description=Clash Service<br>After=network.target<br><br>[Service]<br>Type=simple<br>ExecStart=/home/zzmes/workspace/tools/clash/clash -d /home/zzmes/workspace/tools/clash<br>Restart=on-failure<br>User=zzmes<br>WorkingDirectory=/home/zzmes/workspace/tools/clash<br><br>[Install]<br>WantedBy=multi-user.target<br></code></pre></td></tr></table></figure></p></li>
-<li><p>保存后执行： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl daemon-reload<br><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">enable</span> clash      <span class="hljs-comment"># 开机启动</span><br><span class="hljs-built_in">sudo</span> systemctl start clash       <span class="hljs-comment"># 立即启动</span><br><span class="hljs-built_in">sudo</span> systemctl status clash      <span class="hljs-comment"># 查看状态</span><br></code></pre></td></tr></table></figure></p></li>
-</ul>
-<h2 id="clash相关的管理命令">Clash相关的管理命令</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#启动Clash</span><br><span class="hljs-built_in">sudo</span> systemctl start clash.service<br><span class="hljs-comment">#重启Clash</span><br><span class="hljs-built_in">sudo</span> systemctl restart clash.service<br><span class="hljs-comment">#查看Clash运行状态</span><br><span class="hljs-built_in">sudo</span> systemctl status clash.service<br><span class="hljs-comment">#禁用全局代理</span><br><span class="hljs-built_in">unset</span> http_proxy<br><span class="hljs-built_in">unset</span> https_proxy<br><span class="hljs-comment">#启用全局代理</span><br><span class="hljs-built_in">set</span> http_proxy<br><span class="hljs-built_in">set</span> https_proxy<br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -507,7 +576,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Ubuntu Server 配置 Clash</div>
+      <div>在 Ubuntu Server 上配置 Clash：让终端代理随开机启动</div>
       <div>https://zzmes.github.io/2025/09/10/ubuntu-clash-md/</div>
     </div>
     <div class="license-meta">
@@ -552,9 +621,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/09/13/jetson-swap/" title="Jetson orin Nano 增加交换空间">
+                      <a href="/2025/09/13/jetson-swap/" title="给 Jetson Orin Nano 增加 16 GiB Swap">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Jetson orin Nano 增加交换空间</span>
+                        <span class="hidden-mobile">给 Jetson Orin Nano 增加 16 GiB Swap</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

@@ -19,16 +19,16 @@
   <meta name="author" content="Zzmes">
   <meta name="keywords" content="blog">
   
-    <meta name="description" content="ubuntu 增加交换空间">
+    <meta name="description" content="给内存吃紧的 Jetson 留一点余量：记录磁盘 Swap 的创建、开机启用与撤销，并整理 ZRAM 和无桌面启动的相关设置。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Jetson orin Nano 增加交换空间">
+<meta property="og:title" content="给 Jetson Orin Nano 增加 16 GiB Swap">
 <meta property="og:url" content="https://zzmes.github.io/2025/09/13/jetson-swap/index.html">
 <meta property="og:site_name" content="Zzmes space">
-<meta property="og:description" content="ubuntu 增加交换空间">
+<meta property="og:description" content="给内存吃紧的 Jetson 留一点余量：记录磁盘 Swap 的创建、开机启用与撤销，并整理 ZRAM 和无桌面启动的相关设置。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zzmes.github.io/img/post_index/clash.jpg">
 <meta property="article:published_time" content="2025-09-13T15:25:12.000Z">
-<meta property="article:modified_time" content="2026-03-26T14:56:14.390Z">
+<meta property="article:modified_time" content="2026-10-31T09:54:20.295Z">
 <meta property="article:author" content="Zzmes">
 <meta property="article:tag" content="swap">
 <meta property="article:tag" content="ubuntu">
@@ -39,7 +39,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Jetson orin Nano 增加交换空间 - Zzmes space</title>
+  <title>给 Jetson Orin Nano 增加 16 GiB Swap - Zzmes space</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -341,7 +341,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Jetson orin Nano 增加交换空间"></span>
+            <span id="subtitle" data-typed-text="给 Jetson Orin Nano 增加 16 GiB Swap"></span>
           
         </div>
 
@@ -370,7 +370,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          548 字
+          2.4k 字
         
       </span>
     
@@ -382,7 +382,7 @@
         
         
           <!-- compatible with older versions-->
-          5 分钟
+          21 分钟
         
       </span>
     
@@ -430,13 +430,13 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Jetson orin Nano 增加交换空间</h1>
+            <h1 id="seo-header">给 Jetson Orin Nano 增加 16 GiB Swap</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
                     <!-- compatible with older versions-->
-                    本文最后更新于：2026年3月26日 晚上
+                    本文最后更新于：2026年10月31日 下午
                   
                 
               </p>
@@ -444,17 +444,104 @@
             
               <div class="markdown-body">
                 
-                <h2 id="执行命令">执行命令</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">disable</span> nvzramconfig<br><span class="hljs-built_in">sudo</span> fallocate -l 16G /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> mkswap /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> swapon /mnt/16GB.swap<br></code></pre></td></tr></table></figure>
-<p>然后在<code>/etc/fstab</code>的末尾添加以下行，以使更改永久生效：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/mnt/16GB.swap  none  swap  sw 0  0<br></code></pre></td></tr></table></figure>
-<h2 id="如何取消">如何取消</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> swapoff /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">rm</span> /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">enable</span> nvzramconfig<br><span class="hljs-built_in">sudo</span> systemctl start nvzramconfig<br></code></pre></td></tr></table></figure>
-<p>删除<code>/etc/fstab</code>中的挂载记录 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/mnt/16GB.swap  none  swap  sw 0  0<br></code></pre></td></tr></table></figure></p>
-<h2 id="其他禁用桌面图形用户界面">其他（禁用桌面图形用户界面）</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> init 3     <span class="hljs-comment"># 停止桌面</span><br>// 使用Ctrl+Alt+F1、F2等组合键让用户重新登录到控制台<br><span class="hljs-built_in">sudo</span> init 5     <span class="hljs-comment"># 重新启动桌面</span><br></code></pre></td></tr></table></figure>
-<p>如果希望在重启后该设置仍然生效，可以使用以下命令来更改启动行为：
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl set-default multi-user.target     <span class="hljs-comment"># 启动时禁用桌面</span><br><span class="hljs-built_in">sudo</span> systemctl set-default graphical.target      <span class="hljs-comment"># 启动时启用桌面</span><br></code></pre></td></tr></table></figure></p>
+                <p>在 Jetson Orin Nano
+上编译程序、安装依赖或运行较大的任务时，内存余量往往值得多看一眼。给系统加一份磁盘
+Swap，可以在内存压力上来时提供一些缓冲。</p>
+<p>这里记录一份 16 GiB 交换文件的配置过程，也把开机启用、撤销，以及 ZRAM
+和桌面启动方式的设置放在一起，方便以后回查。</p>
+<p>Swap 的速度明显慢于内存，适合缓解部分内存压力。对于 GPU 或 TensorRT
+的内存分配问题，增加 Swap 也不保证能够解决，仍需要结合具体任务判断。</p>
+<h2 id="动手前先看内存和磁盘">动手前，先看内存和磁盘</h2>
+<p>先查看当前的内存、交换空间，以及计划放置文件的磁盘：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">free -h<br>swapon --show<br><span class="hljs-built_in">df</span> -h /mnt<br>findmnt -T /mnt -o TARGET,FSTYPE,OPTIONS<br></code></pre></td></tr></table></figure>
+<p>这几项分别用来确认：当前还剩多少可用内存、已有的 Swap
+是什么、磁盘空间是否足够，以及 <code>/mnt</code>
+实际位于哪个文件系统。</p>
+<p>下面以普通的 <strong>ext4 文件系统</strong>为例，文件路径沿用
+<code>/mnt/16GB.swap</code>。它会实际占用约 16 GiB
+的磁盘空间，除此之外还要给系统和日常任务留出余量。如果使用其他磁盘，请把下文路径统一替换过去。</p>
+<p>如果目标是 Btrfs 等有专门 Swap
+文件要求的文件系统，需要按对应的文件系统文档操作，不直接套用下面的创建步骤。</p>
+<h2 id="创建并启用交换文件">创建并启用交换文件</h2>
+<p><strong>先确认 <code>/mnt/16GB.swap</code>
+不存在，也没有正在使用的同名交换文件，再执行初始化。已有的 Swap
+文件不要重复运行 <code>mkswap</code>。</strong></p>
+<p>原笔记里使用 <code>fallocate</code>
+预分配文件。考虑到不同文件系统对预分配文件的处理存在差异，这里改用
+<code>dd</code> 写入实际数据，减少遇到 “swapfile has holes” 的可能。</p>
+<p>依次执行，每条命令成功后再继续下一条：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">dd</span> <span class="hljs-keyword">if</span>=/dev/zero of=/mnt/16GB.swap bs=1M count=16384 status=progress<br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">chmod</span> 600 /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> mkswap /mnt/16GB.swap<br><span class="hljs-built_in">sudo</span> swapon /mnt/16GB.swap<br></code></pre></td></tr></table></figure>
+<p>第一条命令需要写入完整的 16 GiB
+数据，耗时取决于磁盘速度。<code>chmod 600</code>
+则把文件访问权限限制为所有者可读写。</p>
+<p>启用后再检查一次：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">swapon --show<br>free -h<br></code></pre></td></tr></table></figure>
+<p>在交换空间列表中，应能看到
+<code>/mnt/16GB.swap</code>。如果原来已经有 ZRAM 或其他
+Swap，总量会包含它们，因此不一定恰好显示为 16 GiB。</p>
+<h2 id="写入-fstab让重启后继续生效">写入 fstab，让重启后继续生效</h2>
+<p>手动执行的 <code>swapon</code>
+只作用于当前这次启动。要让系统在重启后启用这份交换文件，还需要配置
+<code>/etc/fstab</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudoedit /etc/fstab<br></code></pre></td></tr></table></figure>
+<p>在末尾添加一行，已有相同条目时不要重复添加：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">/mnt/16GB.swap  none  swap  sw  0  0<br></code></pre></td></tr></table></figure>
+<p>保存后，可以先检查文件系统表的配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> findmnt --verify --verbose<br></code></pre></td></tr></table></figure>
+<p>如果交换文件放在单独挂载的磁盘上，还要确认那块磁盘本身能在开机时正常挂载。下次重启后，再用
+<code>swapon --show</code> 确认这份文件已经启用。</p>
+<h2 id="jetson-自带的-zram-要不要关">Jetson 自带的 ZRAM 要不要关？</h2>
+<p>如果在 <code>swapon --show</code> 中看到了 <code>/dev/zram0</code>
+等设备，它们是基于内存压缩的交换设备，与刚创建的磁盘文件不同。</p>
+<p>添加磁盘 Swap 时，可以先保留现有的
+ZRAM。是否关闭，应结合具体负载判断；原笔记中关闭 ZRAM
+的做法，放在这里作为可选设置。</p>
+<p>先确认系统里有对应的服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl status nvzramconfig.service<br></code></pre></td></tr></table></figure>
+<p>如果决定关闭它的开机自启：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">disable</span> nvzramconfig.service<br></code></pre></td></tr></table></figure>
+<p>这条命令不会立即停止当前启动中已经运行的服务。安排重启后，再检查 ZRAM
+的状态。恢复自启并启动服务则使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">enable</span> --now nvzramconfig.service<br></code></pre></td></tr></table></figure>
+<p>不同 JetPack
+版本的设置可能有所不同，以当前机器的服务状态和交换空间列表为准。</p>
+<h2 id="不再需要时按顺序撤销">不再需要时，按顺序撤销</h2>
+<p>先编辑
+<code>/etc/fstab</code>，删除前面添加的那一行，避免下次启动继续启用它。</p>
+<p>然后停用交换文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> swapoff /mnt/16GB.swap<br></code></pre></td></tr></table></figure>
+<p>停用时，系统需要为其中的数据找到其他可用的存放空间。如果内存压力较大，先结束占用内存的任务；<code>swapoff</code>
+失败时不要接着删除文件。</p>
+<p>确认 <code>swapon --show</code> 中已经没有这份文件，再删除它：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">rm</span> -- /mnt/16GB.swap<br></code></pre></td></tr></table></figure>
+<p>如果此前还禁用了 ZRAM，并且希望恢复原来的设置，再执行上面的
+<code>enable --now nvzramconfig.service</code> 即可。</p>
+<h2 id="可选主要通过-ssh-使用时关闭桌面启动">可选：主要通过 SSH
+使用时，关闭桌面启动</h2>
+<p>如果这台 Jetson
+主要用来远程运行任务，可以按需把默认启动目标设为命令行模式，减少桌面环境的常驻开销：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl set-default multi-user.target<br></code></pre></td></tr></table></figure>
+<p>这会改变下次启动时的默认目标，不会立即关闭当前桌面。恢复桌面启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl set-default graphical.target<br></code></pre></td></tr></table></figure>
+<p>如果需要立即切换，可以使用
+<code>sudo systemctl isolate multi-user.target</code>；它会停止当前图形会话，执行前要保存桌面中的工作，并确认
+SSH 可以正常连接。恢复图形会话则使用
+<code>sudo systemctl isolate graphical.target</code>，前提是系统已经安装并配置好桌面环境。</p>
+<p>这部分可以按需选择。先观察任务运行时的内存使用，再决定是否调整桌面或
+ZRAM，比一次改动所有设置更容易看清每一步的效果。</p>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man8/swapon.8.html">swapon
+/ swapoff：交换空间与文件系统要求</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://forums.developer.nvidia.com/t/jetpack-4-2-3-has-a-built-in-2gb-swap-file-we-are-not-able-to-increase-this-to-4-gb/108324">NVIDIA
+开发者论坛：Jetson 的 ZRAM 与磁盘 Swap</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://forums.developer.nvidia.com/t/best-location-for-swap-file-on-xavier-nx-with-a-250gb-ssd/234886">NVIDIA
+开发者论坛：ZRAM 与 GPU 可用内存的讨论</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://www.freedesktop.org/software/systemd/man/latest/systemctl.html">systemctl：服务与启动目标管理</a></li>
+</ul>
 
                 
               </div>
@@ -502,7 +589,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Jetson orin Nano 增加交换空间</div>
+      <div>给 Jetson Orin Nano 增加 16 GiB Swap</div>
       <div>https://zzmes.github.io/2025/09/13/jetson-swap/</div>
     </div>
     <div class="license-meta">
@@ -551,8 +638,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/09/10/ubuntu-clash-md/" title="Ubuntu Server 配置 Clash">
-                        <span class="hidden-mobile">Ubuntu Server 配置 Clash</span>
+                      <a href="/2025/09/10/ubuntu-clash-md/" title="在 Ubuntu Server 上配置 Clash：让终端代理随开机启动">
+                        <span class="hidden-mobile">在 Ubuntu Server 上配置 Clash：让终端代理随开机启动</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
