@@ -1,4 +1,5 @@
-.twikoo .tk-submit .el-textarea__inner {
+.twikoo .tk-submit .el-textarea__inner,
+.twikoo .tk-submit .tk-textarea .tk-input__inner {
     min-height: 150px !important;
 }
 
